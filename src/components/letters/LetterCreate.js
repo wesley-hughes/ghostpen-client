@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ghostInput } from '../../managers/GhostManager';
 import { getContacts } from '../../managers/ContactManager';
 import { getTones } from '../../managers/ToneManager';
@@ -36,7 +36,7 @@ export const LetterCreate = () => {
       const response = await ghostInput(userInput);
       setResponse(response);
 
-      // Create the letter object
+      // need to create the letter object to send in post
       const currentDate = new Date().toISOString().split('T')[0];
       const newLetterObj = {
         contact: selectedContact.id,
@@ -55,7 +55,7 @@ export const LetterCreate = () => {
     e.preventDefault();
 
     try {
-      // Save the Letter object
+      // save the Letter object
       await createLetter(letterObj);
 
       // Reset the form
