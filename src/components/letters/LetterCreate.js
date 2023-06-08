@@ -15,6 +15,16 @@ export const LetterCreate = () => {
   const [letterPurpose, setLetterPurpose] = useState('');
   const [letterObj, setLetterObj] = useState(null);
 
+  useEffect(() => {
+    getUser().then((data) => setUser(data));
+  }, []);
+  useEffect(() => {
+    getContacts().then((data) => setContacts(data));
+  }, []);
+  useEffect(() => {
+    getTones().then((data) => setTones(data));
+  }, []);
+
   const handleAIResponseGenerate = async (e) => {
     e.preventDefault();
 
@@ -36,7 +46,6 @@ export const LetterCreate = () => {
       const response = await ghostInput(userInput);
       setResponse(response);
 
-      // need to create the letter object to send in post
       const currentDate = new Date().toISOString().split('T')[0];
       const newLetterObj = {
         contact: selectedContact.id,
@@ -55,10 +64,8 @@ export const LetterCreate = () => {
     e.preventDefault();
 
     try {
-      // save the Letter object
       await createLetter(letterObj);
 
-      // Reset the form
       setResponse('');
       setSelectedContact('');
       setSelectedTones([]);
@@ -70,15 +77,6 @@ export const LetterCreate = () => {
     }
   };
 
-  useEffect(() => {
-    getUser().then((data) => setUser(data));
-  }, []);
-  useEffect(() => {
-    getContacts().then((data) => setContacts(data));
-  }, []);
-  useEffect(() => {
-    getTones().then((data) => setTones(data));
-  }, []);
 
   const handleContactChange = (e) => {
     const selectedContactId = parseInt(e.target.value);
@@ -130,7 +128,7 @@ export const LetterCreate = () => {
           <textarea
             value={response}
             onChange={(e) => setResponse(e.target.value)}
-            placeholder="Edit the response"
+            placeholder="Edit the letter"
           />
           <button onClick={handleLetterSave}>Save Letter</button>
         </div>
