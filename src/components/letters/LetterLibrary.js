@@ -1,19 +1,27 @@
 import { useEffect, useState } from 'react';
 import { getLetters, deleteLetter } from '../../managers/LetterManager';
-import { LetterModal } from './LetterModal';
+import { LetterUpdateModal } from './LetterUpdateModal';
 import { copyToClipboard } from '../utils/copyToClipboard';
 
 export const LetterLibrary = () => {
-  const [letters, setLetters] = useState([]);
+  const [filteredLetters, setFilteredLetters] = useState([]);
   const [selectedLetter, setSelectedLetter] = useState(null);
+  const [dateFilter, setDateFilter] = useState('');
+  const [contactFilter, setContactFilter] = useState('');
 
   useEffect(() => {
     fetchLetters();
-  }, []);
+  }, [dateFilter, contactFilter]);
 
   const fetchLetters = () => {
-    getLetters()
-      .then((data) => setLetters(data))
+    getLetters(dateFilter, contactFilter)
+      .then((data) => {
+        const filteredData = data.filter((letter) => {
+          const contactFullName = `${letter.contact.first_name} ${letter.contact.last_name}`;
+          return contactFullName.toLowerCase().includes(contactFilter.toLowerCase());
+        });
+        setFilteredLetters(filteredData);
+      })
       .catch((error) => console.error('Error fetching letters:', error));
   };
 
@@ -35,6 +43,10 @@ export const LetterLibrary = () => {
     setSelectedLetter(letter);
   };
 
+  const handleLetterUpdate = () => {
+    fetchLetters(); 
+  };
+
   const closeModal = () => {
     setSelectedLetter(null);
   };
@@ -47,6 +59,24 @@ export const LetterLibrary = () => {
 
   return (
     <div className="letter-library">
+      <div className="filters">
+        <label>Date:</label>
+        <select value={dateFilter} onChange={(e) => setDateFilter(e.target.value)}>
+          <option value="">All</option>
+          <option value="last_week">Last Week</option>
+          <option value="last_30_days">Last 30 Days</option>
+          <option value="last_90_days">Last 90 Days</option>
+        </select>
+
+        <label>Contact:</label>
+        <input
+          type="text"
+          value={contactFilter}
+          onChange={(e) => setContactFilter(e.target.value)}
+          placeholder="Enter contact name"
+        />
+      </div>
+
       <table>
         <thead>
           <tr>
@@ -57,10 +87,10 @@ export const LetterLibrary = () => {
           </tr>
         </thead>
         <tbody>
-          {letters.map((letter) => (
+          {filteredLetters.map((letter) => (
             <tr key={letter.id}>
               <td>{letter.date}</td>
-              <td>{letter.contact.name}</td>
+              <td>{letter.contact.first_name} {letter.contact.last_name}</td>
               <td>{truncateSnippet(letter.letter_body, 2)}</td>
               <td>
                 <button onClick={() => handleEdit(letter)}>Edit</button>
@@ -73,7 +103,7 @@ export const LetterLibrary = () => {
       </table>
 
       {selectedLetter && (
-        <LetterModal letter={selectedLetter} closeModal={closeModal} />
+        <LetterUpdateModal letter={selectedLetter} closeModal={closeModal} onLetterUpdate={handleLetterUpdate} />
       )}
     </div>
   );

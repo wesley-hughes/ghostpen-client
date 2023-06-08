@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { createContact, updateContact } from '../../managers/ContactManager';
 import { getTags } from '../../managers/TagManager';
 
-
-export const ContactForm = ({ contact, onSave }) => {
+export const ContactForm = ({ contact, onSave, fetchContacts }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [bio, setBio] = useState('');
@@ -15,6 +14,7 @@ export const ContactForm = ({ contact, onSave }) => {
       setFirstName(contact.first_name);
       setLastName(contact.last_name);
       setBio(contact.bio);
+      setSelectedTags(contact.tags.map(tag => tag.id));
     }
   }, [contact]);
 
@@ -48,14 +48,31 @@ export const ContactForm = ({ contact, onSave }) => {
     };
 
     if (contact) {
-      updateContact(contact.id, data)
-        .then(() => onSave())
-        .catch((error) => console.error('Error updating contact:', error));
-    } else {
-      createContact(data)
-        .then(() => onSave())
-        .catch((error) => console.error('Error creating contact:', error));
-    }
+        updateContact(contact.id, data)
+          .then(() => {
+            onSave();
+            window.alert('Contact Updated');
+            clearForm();
+            fetchContacts();
+          })
+          .catch((error) => console.error('Error updating contact:', error));
+      } else {
+        createContact(data)
+          .then(() => {
+            onSave();
+            window.alert('Contact Created');
+            clearForm();
+            fetchContacts();
+          })
+          .catch((error) => console.error('Error creating contact:', error));
+      }
+    };
+  
+  const clearForm = () => {
+    setFirstName('');
+    setLastName('');
+    setBio('');
+    setSelectedTags([]);
   };
 
   return (

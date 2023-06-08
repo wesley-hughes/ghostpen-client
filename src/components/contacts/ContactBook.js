@@ -1,28 +1,12 @@
 import { deleteContact, getContacts } from '../../managers/ContactManager';
 import { useState, useEffect } from 'react';
 
-export const ContactBook = ({ handleContactClick }) => {
-  const [contacts, setContacts] = useState([]);
-
-  const fetchContacts = () => {
-    getContacts()
-      .then((data) => {
-        setContacts(data);
-      })
-      .catch((error) => {
-        console.error('Error retrieving contacts:', error);
-      });
-  };
-
-  useEffect(() => {
-    fetchContacts();
-  }, []);
-
+export const ContactBook = ({contacts, handleContactClick, fetchContacts }) => {
 
   const handleDeleteContact = (contactId) => {
     deleteContact(contactId)
       .then(() => {
-        fetchContacts();
+        fetchContacts()
       })
       .catch((error) => {
         console.error('Error deleting contact:', error);
@@ -32,8 +16,8 @@ export const ContactBook = ({ handleContactClick }) => {
   return (
     <div className="contact-book">
       {contacts.map((contact) => (
-        <div key={contact.id} onClick={() => handleContactClick(contact.id)}>
-          <p>
+        <div key={contact.id}>
+          <p onClick={() => handleContactClick(contact.id)}>
             {contact.first_name} {contact.last_name}
           </p>
           <button onClick={() => handleDeleteContact(contact.id)}>Delete</button>

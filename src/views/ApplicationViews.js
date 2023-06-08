@@ -8,16 +8,16 @@ import { LetterLibrary } from "../components/letters/LetterLibrary";
 
 export const ApplicationViews = () => {
   return (
-    <Router>
+
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route element={<Authorized />}>
+        <Route path="/" element={<Authorized />}>
           <Route path="/letter" element={<LetterCreate />} />
           <Route path="/library" element={<LetterLibrary />} />
           <Route path="/contact" element={<ContactPage />} />
         </Route>
       </Routes>
-    </Router>
+
   );
 };

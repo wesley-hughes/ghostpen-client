@@ -6,6 +6,7 @@ import { ContactForm } from './ContactForm';
 export const ContactPage = () => {
   const [contacts, setContacts] = useState([]);
   const [selectedContact, setSelectedContact] = useState(null);
+  const [formKey, setFormKey] = useState(0); 
 
   useEffect(() => {
     fetchContacts();
@@ -26,6 +27,7 @@ export const ContactPage = () => {
   const handleFormSave = () => {
     setSelectedContact(null);
     fetchContacts();
+    setFormKey((prevKey) => prevKey + 1);
   };
 
   return (
@@ -34,12 +36,15 @@ export const ContactPage = () => {
         <ContactBook
           contacts={contacts}
           handleContactClick={handleContactClick}
+          fetchContacts={fetchContacts}
         />
       </div>
       <div className="contact-form">
         <ContactForm
+          key={formKey}
           contact={selectedContact}
           onSave={handleFormSave}
+          fetchContacts={fetchContacts}
         />
       </div>
     </div>
