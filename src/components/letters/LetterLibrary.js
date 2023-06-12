@@ -1,42 +1,95 @@
-import { useEffect, useState } from 'react';
-import { getLetters, deleteLetter } from '../../managers/LetterManager';
-import { LetterUpdateModal } from './LetterUpdateModal';
-import { copyToClipboard } from '../utils/copyToClipboard';
+import React, { useEffect, useState, useRef } from "react";
+import {
+  IconButton,
+  InputAdornment,
+  Paper,
+  Snackbar,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Box,
+} from "@mui/material";
+import {
+  EditOutlined,
+  DeleteOutline,
+  FileCopyOutlined,
+} from "@mui/icons-material";
+import { getLetters, deleteLetter } from "../../managers/LetterManager";
+import { LetterUpdateModal } from "./LetterUpdateModal";
+import { copyToClipboard } from "../utils/copyToClipboard";
+import { ClearOutlined } from "@mui/icons-material";
 
 export const LetterLibrary = () => {
   const [filteredLetters, setFilteredLetters] = useState([]);
   const [selectedLetter, setSelectedLetter] = useState(null);
-  const [dateFilter, setDateFilter] = useState('');
-  const [contactFilter, setContactFilter] = useState('');
+  const [contactFilter, setContactFilter] = useState("");
+  const [editSnackbarOpen, setEditSnackbarOpen] = useState(false);
+  const [deleteSnackbarOpen, setDeleteSnackbarOpen] = useState(false);
+  const [copySnackbarOpen, setCopySnackbarOpen] = useState(false);
+  const [sortBy, setSortBy] = useState(""); // State for selected sorting option
+
+  const modalRef = useRef(null);
 
   useEffect(() => {
     fetchLetters();
-  }, [dateFilter, contactFilter]);
+  }, [contactFilter, sortBy]);
 
   const fetchLetters = () => {
-    getLetters(dateFilter, contactFilter)
+    getLetters(sortBy, contactFilter) // Pass the sortBy value to the API for sorting
       .then((data) => {
         const filteredData = data.filter((letter) => {
           const contactFullName = `${letter.contact.first_name} ${letter.contact.last_name}`;
           return contactFullName.toLowerCase().includes(contactFilter.toLowerCase());
         });
-        setFilteredLetters(filteredData);
+
+        let sortedData = filteredData;
+
+        switch (sortBy) {
+          case "dateAsc":
+            sortedData = filteredData.sort((a, b) => a.date.localeCompare(b.date));
+            break;
+          case "dateDesc":
+            sortedData = filteredData.sort((a, b) => b.date.localeCompare(a.date));
+            break;
+          case "lastNameAsc":
+            sortedData = filteredData.sort((a, b) =>
+              a.contact.last_name.localeCompare(b.contact.last_name)
+            );
+            break;
+          case "lastNameDesc":
+            sortedData = filteredData.sort((a, b) =>
+              b.contact.last_name.localeCompare(a.contact.last_name)
+            );
+            break;
+          default:
+            break;
+        }
+
+        setFilteredLetters(sortedData);
       })
-      .catch((error) => console.error('Error fetching letters:', error));
+      .catch((error) => console.error("Error fetching letters:", error));
   };
 
   const handleDelete = (letterId) => {
     deleteLetter(letterId)
       .then(() => {
         fetchLetters();
-        console.log('Letter deleted successfully');
+        setDeleteSnackbarOpen(true);
       })
-      .catch((error) => console.error('Error deleting letter:', error));
+      .catch((error) => console.error("Error deleting letter:", error));
   };
 
   const handleCopy = (body) => {
     copyToClipboard(body);
-    console.log('Letter body copied to clipboard');
+    setCopySnackbarOpen(true);
   };
 
   const handleEdit = (letter) => {
@@ -44,67 +97,134 @@ export const LetterLibrary = () => {
   };
 
   const handleLetterUpdate = () => {
-    fetchLetters(); 
+    fetchLetters();
+    setEditSnackbarOpen(true);
   };
 
   const closeModal = () => {
     setSelectedLetter(null);
   };
 
-  const truncateSnippet = (text, lines) => {
-    const snippetLines = text.split('\n').slice(0, lines);
-    const truncatedSnippet = snippetLines.join('\n');
-    return truncatedSnippet.length < text.length ? `${truncatedSnippet}...` : truncatedSnippet;
+  const handleEditSnackbarClose = () => {
+    setEditSnackbarOpen(false);
+  };
+
+  const handleSortByChange = (event) => {
+    setSortBy(event.target.value);
   };
 
   return (
     <div className="letter-library">
-      <div className="filters">
-        <label>Date:</label>
-        <select value={dateFilter} onChange={(e) => setDateFilter(e.target.value)}>
-          <option value="">All</option>
-          <option value="last_week">Last Week</option>
-          <option value="last_30_days">Last 30 Days</option>
-          <option value="last_90_days">Last 90 Days</option>
-        </select>
+      <Paper elevation={3} sx={{ p: 2 }}>
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <TextField
+            label="Contact"
+            value={contactFilter}
+            onChange={(e) => setContactFilter(e.target.value)}
+            placeholder="Search by contact name"
+            fullWidth
+            sx={{ mb: 2 }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    size="small"
+                    onClick={() => setContactFilter("")}
+                    disabled={!contactFilter}
+                  >
+                    <ClearOutlined fontSize="small" />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
 
-        <label>Contact:</label>
-        <input
-          type="text"
-          value={contactFilter}
-          onChange={(e) => setContactFilter(e.target.value)}
-          placeholder="Enter contact name"
-        />
-      </div>
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>Sort By</InputLabel>
+            <Select value={sortBy} onChange={handleSortByChange}>
+              <MenuItem value="">None</MenuItem>
+              <MenuItem value="dateAsc">Date Ascending</MenuItem>
+              <MenuItem value="dateDesc">Date Descending</MenuItem>
+              <MenuItem value="lastNameAsc">Last Name Ascending</MenuItem>
+              <MenuItem value="lastNameDesc">Last Name Descending</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+      </Paper>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Contact</th>
-            <th>Snippet</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredLetters.map((letter) => (
-            <tr key={letter.id}>
-              <td>{letter.date}</td>
-              <td>{letter.contact.first_name} {letter.contact.last_name}</td>
-              <td>{truncateSnippet(letter.letter_body, 2)}</td>
-              <td>
-                <button onClick={() => handleEdit(letter)}>Edit</button>
-                <button onClick={() => handleDelete(letter.id)}>Delete</button>
-                <button onClick={() => handleCopy(letter.letter_body)}>Copy</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Box
+        sx={{
+          mt: 2,
+          maxHeight: "calc(100vh - 64px - 56px - 48px - 128px)",
+          overflowY: "auto",
+        }}
+      >
+        <TableContainer component={Paper} elevation={3}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Date</TableCell>
+                <TableCell>Contact</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredLetters.map((letter) => (
+                <TableRow key={letter.id}>
+                  <TableCell>{letter.date}</TableCell>
+                  <TableCell>{`${letter.contact.first_name} ${letter.contact.last_name}`}</TableCell>
+                  <TableCell>
+                    <IconButton size="small" onClick={() => handleEdit(letter)}>
+                      <EditOutlined fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      onClick={() => handleDelete(letter.id)}
+                    >
+                      <DeleteOutline fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      onClick={() => handleCopy(letter.letter_body)}
+                    >
+                      <FileCopyOutlined fontSize="small" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
 
       {selectedLetter && (
-        <LetterUpdateModal letter={selectedLetter} closeModal={closeModal} onLetterUpdate={handleLetterUpdate} />
+        <LetterUpdateModal
+          letter={selectedLetter}
+          closeModal={closeModal}
+          onLetterUpdate={handleLetterUpdate}
+          ref={modalRef}
+        />
       )}
+
+      <Snackbar
+        open={editSnackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleEditSnackbarClose}
+        message="Letter updated successfully"
+      />
+      <Snackbar
+        open={deleteSnackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setDeleteSnackbarOpen(false)}
+        message="Letter deleted successfully"
+      />
+
+      <Snackbar
+        open={copySnackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setCopySnackbarOpen(false)}
+        message="Letter copied to clipboard"
+      />
     </div>
   );
 };
