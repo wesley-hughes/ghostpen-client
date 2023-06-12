@@ -40,11 +40,4 @@ export const updateLetter = (updatedLetter, letterId) => {
     },
     body: JSON.stringify(updatedLetter)
   })
-  .then(res => {
-    if (!res.ok) {
-      throw Error(res.statusText);
-    }
-    return res.json();
-  })
-  .catch(error => console.log(error));
 };

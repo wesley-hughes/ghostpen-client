@@ -1,20 +1,46 @@
 import { useState, useEffect } from 'react';
+import { TextField, Button, Typography, FormControl, InputLabel, Select, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { createContact, updateContact } from '../../managers/ContactManager';
 import { getTags } from '../../managers/TagManager';
+import { styled } from '@mui/system';
+
+
+const FormContainer = styled('form')({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '16px',
+  maxWidth: '400px',
+  margin: 'auto',
+});
+
+const Heading = styled(Typography)({
+  textAlign: 'center',
+});
+
+const ButtonContainer = styled('div')({
+  display: 'flex',
+  justifyContent: 'space-between',
+  marginTop: '2px',
+});
 
 export const ContactForm = ({ contact, onSave, fetchContacts }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [bio, setBio] = useState('');
-  const [tags, setTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+  const [tags, setTags] = useState([])
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (contact) {
       setFirstName(contact.first_name);
       setLastName(contact.last_name);
       setBio(contact.bio);
-      setSelectedTags(contact.tags.map(tag => tag.id));
+      setSelectedTags(contact.tags.map((tag) => tag.id));
+      setEditMode(true);
+    } else {
+      clearForm();
     }
   }, [contact]);
 
@@ -26,15 +52,8 @@ export const ContactForm = ({ contact, onSave, fetchContacts }) => {
       .catch((error) => console.error('Error retrieving tags:', error));
   }, []);
 
-  const handleTagChange = (tagId) => {
-    const isSelected = selectedTags.includes(tagId);
-    if (isSelected) {
-      setSelectedTags((prevSelectedTags) =>
-        prevSelectedTags.filter((id) => id !== tagId)
-      );
-    } else {
-      setSelectedTags((prevSelectedTags) => [...prevSelectedTags, tagId]);
-    }
+  const handleTagChange = (event) => {
+    setSelectedTags(event.target.value);
   };
 
   const handleSubmit = (e) => {
@@ -47,71 +66,78 @@ export const ContactForm = ({ contact, onSave, fetchContacts }) => {
       tags: selectedTags,
     };
 
-    if (contact) {
-        updateContact(contact.id, data)
-          .then(() => {
-            onSave();
-            window.alert('Contact Updated');
-            clearForm();
-            fetchContacts();
-          })
-          .catch((error) => console.error('Error updating contact:', error));
-      } else {
-        createContact(data)
-          .then(() => {
-            onSave();
-            window.alert('Contact Created');
-            clearForm();
-            fetchContacts();
-          })
-          .catch((error) => console.error('Error creating contact:', error));
-      }
-    };
-  
+    if (editMode) {
+      updateContact(contact.id, data)
+        .then(() => {
+          onSave();
+          window.alert('Contact Updated');
+          clearForm();
+          fetchContacts();
+        })
+        .catch((error) => console.error('Error updating contact:', error));
+    } else {
+      createContact(data)
+        .then(() => {
+          onSave();
+          window.alert('Contact Created');
+          clearForm();
+          fetchContacts();
+        })
+        .catch((error) => console.error('Error creating contact:', error));
+    }
+  };
+
   const clearForm = () => {
     setFirstName('');
     setLastName('');
     setBio('');
     setSelectedTags([]);
+    setEditMode(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        First Name:
-        <input
-          type="text"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-        />
-      </label>
-      <label>
-        Last Name:
-        <input
-          type="text"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-        />
-      </label>
-      <label>
-        Bio:
-        <textarea value={bio} onChange={(e) => setBio(e.target.value)}></textarea>
-      </label>
-      <label>
-        Tags:
-        {tags.map((tag) => (
-          <div key={tag.id}>
-            <input
-              type="checkbox"
-              value={tag.id}
-              checked={selectedTags.includes(tag.id)}
-              onChange={() => handleTagChange(tag.id)}
-            />
-            <span>{tag.label}</span>
-          </div>
-        ))}
-      </label>
-      <button type="submit">{contact ? 'Update' : 'Create'} Contact</button>
-    </form>
+    <>
+      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+        <DialogTitle>{editMode ? 'Edit Contact' : 'New Contact'}</DialogTitle>
+        <DialogContent>
+          <FormContainer onSubmit={handleSubmit}>
+            <TextField label="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+            <TextField label="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+            <TextField label="Bio" multiline rows={4} value={bio} onChange={(e) => setBio(e.target.value)} />
+            <FormControl>
+              <InputLabel>Tags</InputLabel>
+              <Select
+                multiple
+                value={selectedTags}
+                onChange={handleTagChange}
+                renderValue={(selected) =>
+                  selected.map((tagId) => tags.find((tag) => tag.id === tagId)?.label).join(', ')
+                }
+              >
+                {tags.map((tag) => (
+                  <MenuItem key={tag.id} value={tag.id}>
+                    {tag.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </FormContainer>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button type="submit" variant="contained">
+            {editMode ? 'Update' : 'Create'} Contact
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
-};
+                };

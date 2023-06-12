@@ -1,61 +1,90 @@
-import React, { useRef } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { loginUser } from "../../managers/AuthManager"
-
-
+import React, { useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Button,
+  Container,
+  Dialog,
+  FormControl,
+  FormGroup,
+  FormLabel,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { loginUser } from "../../managers/AuthManager";
 
 export const Login = () => {
-    const username = useRef()
-    const password = useRef()
-    const invalidDialog = useRef()
-    const navigate = useNavigate()
+  const username = useRef("");
+  const password = useRef("");
+  const invalidDialog = useRef(null);
+  const navigate = useNavigate();
 
-    const handleLogin = (e) => {
-        e.preventDefault()
-        const user = {
-            username: username.current.value,
-            password: password.current.value
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const user = {
+      username: username.current.value,
+      password: password.current.value,
+    };
+    loginUser(user)
+      .then((res) => {
+        if ("valid" in res && res.valid && "token" in res) {
+          localStorage.setItem("auth_token", res.token);
+          navigate("/");
+        } else {
+          invalidDialog.current.showModal();
         }
-        loginUser(user)
-            .then(res => {
-                if ("valid" in res && res.valid && "token" in res) {
-                    localStorage.setItem("auth_token", res.token)
-                    navigate("/")
-                }
-                else {
-                    invalidDialog.current.showModal()
-                }
-            })
-    }
+      });
+  };
 
-    return (
-        <main className="container--login">
-            <dialog className="dialog dialog--auth" ref={invalidDialog}>
-                <div>Username or password was not valid.</div>
-                <button className="button--close" onClick={e => invalidDialog.current.close()}>Close</button>
-            </dialog>
-            <section>
-                <form className="form--login" onSubmit={handleLogin}>
-                    <h1>Level Up</h1>
-                    <h2>Please sign in</h2>
-                    <fieldset>
-                        <label htmlFor="inputUsername"> Username address </label>
-                        <input ref={username} type="username" id="username" className="form-control" placeholder="Username address" required autoFocus />
-                    </fieldset>
-                    <fieldset>
-                        <label htmlFor="inputPassword"> Password </label>
-                        <input ref={password} type="password" id="password" className="form-control" placeholder="Password" required />
-                    </fieldset>
-                    <fieldset style={{
-                        textAlign: "center"
-                    }}>
-                        <button className="btn btn-1 btn-sep icon-send" type="submit">Sign In</button>
-                    </fieldset>
-                </form>
-            </section>
-            <section className="link--register">
-                <Link to="/register">Not a member yet?</Link>
-            </section>
-        </main>
-    )
-}
+  return (
+    <Container maxWidth="xs">
+      <Dialog
+        open={false}
+        onClose={() => invalidDialog.current.close()}
+        ref={invalidDialog}
+      >
+        <Typography variant="body1">Username or password was not valid.</Typography>
+        <Button onClick={() => invalidDialog.current.close()}>Close</Button>
+      </Dialog>
+
+      {/* <Typography variant="h4" align="center" gutterBottom>
+        GhostPen
+      </Typography>
+      <Typography variant="h6" align="center" gutterBottom>
+        Please sign in
+      </Typography> */}
+
+      <form onSubmit={handleLogin}>
+        <FormControl fullWidth>
+          <FormLabel htmlFor="inputUsername" sx={{ mt: 4 }}>Email</FormLabel>
+          <TextField
+            inputRef={username}
+            type="username"
+            id="username"
+            placeholder="Email"
+            required
+            autoFocus
+          />
+        </FormControl>
+
+        <FormControl fullWidth>
+          <FormLabel htmlFor="inputPassword">Password</FormLabel>
+          <TextField
+            inputRef={password}
+            type="password"
+            id="password"
+            placeholder="Password"
+            required
+          />
+        </FormControl>
+
+        <Button type="submit" variant="contained" sx={{ mt: 2 }}>
+          Sign In
+        </Button>
+      </form>
+
+      <Typography variant="body1" align="center" sx={{ mt: 2 }}>
+        <Link to="/register">Not a member yet?</Link>
+      </Typography>
+    </Container>
+  );
+};
