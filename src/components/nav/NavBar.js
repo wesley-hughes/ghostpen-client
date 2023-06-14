@@ -1,4 +1,4 @@
-import { Avatar, Button, IconButton, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
+import { Avatar, IconButton, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { useState } from "react";
@@ -54,7 +54,7 @@ export const NavBar = () => {
             aria-controls="avatar-menu"
             aria-label="account menu"
           >
-            <Avatar />
+            <Avatar src={'./images/ghost.svg'}/>
           </IconButton>
           <Menu
             id="menu-appbar"

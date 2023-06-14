@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import {
   Button,
   CircularProgress,
-  FormControl,
-  InputLabel,
+  Snackbar,
   TextField,
-  Typography,
 } from "@mui/material";
 import { Autocomplete } from "@mui/material";
 import { styled } from "@mui/system";
@@ -23,9 +21,6 @@ const FormContainer = styled("form")({
   margin: "auto",
 });
 
-const Heading = styled(Typography)({
-  textAlign: "center",
-});
 
 export const LetterCreate = () => {
   const [loading, setLoading] = useState(false);
@@ -37,6 +32,8 @@ export const LetterCreate = () => {
   const [user, setUser] = useState({});
   const [letterPurpose, setLetterPurpose] = useState("");
   const [letterObj, setLetterObj] = useState(null);
+  const [letterLength, setLetterLength] = useState("");
+  const [letterSaveSnackbar, setLetterSaveSnackbar] = useState(false);
 
   useEffect(() => {
     getUser().then((data) => setUser(data));
@@ -53,7 +50,7 @@ export const LetterCreate = () => {
   const handleAIResponseGenerate = async (e) => {
     e.preventDefault();
 
-    setLoading(true); // Start loading animation
+    setLoading(true);
 
     try {
       const userObj = {
@@ -68,9 +65,9 @@ export const LetterCreate = () => {
 
       const tones = selectedTones.map((tone) => tone.label).join(", ");
 
-      const userInput = `The letter you are writing is from ${user.name}. Here is a bio for your reference: ${user.bio}.
+      const userInput = `The letter you are writing is from ${userObj.name}. Here is a bio for your reference: ${userObj.bio}.
       It is being written to ${contact.name}. Here is a bio on ${contact.name} for your reference: ${contact.bio}.
-      The purpose of the letter is ${letterPurpose} and the tones of the letter should be ${tones}.`;
+      The purpose of the letter is ${letterPurpose} and the tones of the letter should be ${tones}. The length of the letter should be ${letterLength}`;
 
       const generatedResponse = await ghostInput(userInput);
       setResponse(generatedResponse);
@@ -83,34 +80,31 @@ export const LetterCreate = () => {
         date: currentDate,
       };
 
-      // Update the state variables
       setLetterObj(newLetterObj);
       setResponse(generatedResponse);
     } catch (error) {
       console.error("Error:", error);
     }
 
-    setLoading(false); // Stop loading animation
+    setLoading(false);
+  };
+
+  const clearForm = () => {
+    setResponse("");
+    setSelectedContact(null);
+    setSelectedTones([]);
+    setLetterPurpose("");
+    setLetterObj(null);
   };
 
   const handleLetterSave = async (e) => {
-    e.preventDefault();
-
-    setLoading(true); // Start loading animation
-
     try {
       await createLetter(letterObj);
-
-      setResponse("");
-      setSelectedContact(null);
-      setSelectedTones([]);
-      setLetterPurpose("");
-      setLetterObj(null);
+      clearForm();
+      setLetterSaveSnackbar(true);
     } catch (error) {
       console.error("Error:", error);
     }
-
-    setLoading(false); // Stop loading animation
   };
 
   const handleContactChange = (event, value) => {
@@ -131,23 +125,19 @@ export const LetterCreate = () => {
 
   return (
     <FormContainer onSubmit={handleAIResponseGenerate}>
-    <Autocomplete
-      fullWidth
-      options={sortedContacts}
-      getOptionLabel={(contact) =>
-        `${contact.first_name} ${contact.last_name}`
-      }
-      value={selectedContact}
-      onChange={handleContactChange}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label="Select Contact"
-          sx={{ mt: 4 }}
-        />
-      )}
-      limitTags={4}
-    />
+      <Autocomplete
+        fullWidth
+        options={sortedContacts}
+        getOptionLabel={(contact) =>
+          `${contact.first_name} ${contact.last_name}`
+        }
+        value={selectedContact}
+        onChange={handleContactChange}
+        renderInput={(params) => (
+          <TextField {...params} label="Select Contact" sx={{ mt: 4 }} />
+        )}
+        limitTags={4}
+      />
       <Autocomplete
         fullWidth
         multiple
@@ -155,9 +145,7 @@ export const LetterCreate = () => {
         getOptionLabel={(tone) => tone.label}
         value={selectedTones}
         onChange={handleToneChange}
-        renderInput={(params) => (
-          <TextField {...params} label="Select Tones" />
-        )}
+        renderInput={(params) => <TextField {...params} label="Select Tones" />}
         limitTags={4}
       />
       <TextField
@@ -169,7 +157,26 @@ export const LetterCreate = () => {
         rows={4}
         placeholder="Enter your message"
       />
-      <Button type="submit" disabled={loading}>
+      <Autocomplete
+        fullWidth
+        options={[
+          { value: "Short (100 words or less)", label: "Short" },
+          { value: "Medium (100-300 words)", label: "Medium" },
+          { value: "Long (more than 300 words)", label: "Long" },
+        ]}
+        value={
+          letterLength ? { value: letterLength, label: letterLength } : null
+        }
+        onChange={(e, value) => setLetterLength(value ? value.value : "")}
+        renderInput={(params) => (
+          <TextField {...params} label="Letter Length" />
+        )}
+      />
+      <Button
+        type="button"
+        onClick={(e) => handleAIResponseGenerate(e)}
+        disabled={loading}
+      >
         {loading ? <CircularProgress size={24} /> : "Generate Letter"}
       </Button>
 
@@ -187,11 +194,23 @@ export const LetterCreate = () => {
             autoComplete="off"
             inputProps={{ style: { resize: "vertical" } }}
           />
-          <Button onClick={handleLetterSave} disabled={loading}>
-            {loading ? <CircularProgress size={24} /> : "Save Letter"}
+          <Button
+            onClick={() => {
+              handleLetterSave();
+              setLetterSaveSnackbar(true);
+            }}
+            disabled={loading}
+          >
+            {loading ? <CircularProgress size={44} /> : "Save Letter"}
           </Button>
         </>
       )}
+      <Snackbar
+        open={letterSaveSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setLetterSaveSnackbar(false)}
+        message="Letter saved"
+      />
     </FormContainer>
   );
 };

@@ -6,8 +6,7 @@ import {
 } from "../../managers/UserManager";
 import {
   Button,
-  FormControl,
-  InputLabel,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -27,11 +26,11 @@ const Heading = styled(Typography)({
 });
 
 export const ProfileForm = () => {
-  const [userId, setUserId] = useState("");
   const [user, setUser] = useState({});
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [bio, setBio] = useState("");
+  const [snackbar, setSnackbar] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,8 +61,8 @@ export const ProfileForm = () => {
     };
 
     updateUser(user.id, updatedUser)
-      .then((updatedData) => {
-        console.log("User updated:", updatedData);
+      .then(() => {
+        setSnackbar(true);
       })
       .catch((error) => {
         // Handle error
@@ -96,6 +95,12 @@ export const ProfileForm = () => {
         placeholder="Enter your bio"
       />
       <Button type="submit">Save Changes</Button>
+      <Snackbar
+        open={snackbar}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar(false)}
+        message="Changes saved"
+      />
     </FormContainer>
   );
 };

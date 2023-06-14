@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { updateLetter } from "../../managers/LetterManager";
 import {
   Button,
@@ -7,7 +7,6 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  Typography,
 } from "@mui/material";
 
 export const LetterUpdateModal = ({ letter, closeModal, onLetterUpdate }) => {
@@ -37,6 +36,7 @@ export const LetterUpdateModal = ({ letter, closeModal, onLetterUpdate }) => {
           minRows={6}
           maxRows={10}
           fullWidth
+          sx={{ mt: 2 }}
           value={editedBody}
           onChange={(e) => setEditedBody(e.target.value)}
         />
