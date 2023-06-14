@@ -1,85 +1,138 @@
-import React, { useRef } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { registerUser } from "../../managers/AuthManager"
-
+import React, { useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { registerUser } from "../../managers/AuthManager";
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 export const Register = () => {
-    const firstName = useRef()
-    const lastName = useRef()
-    const username = useRef()
-    const password = useRef()
-    const verifyPassword = useRef()
-    const bio = useRef();
-    const passwordDialog = useRef()
-    const navigate = useNavigate()
+  const firstNameRef = useRef();
+  const lastNameRef = useRef();
+  const usernameRef = useRef();
+  const passwordRef = useRef();
+  const verifyPasswordRef = useRef();
+  const bioRef = useRef();
+  const passwordDialogRef = useRef();
+  const navigate = useNavigate();
 
-    const handleRegister = (e) => {
-        e.preventDefault()
+  const handleRegister = (e) => {
+    e.preventDefault();
 
-        if (password.current.value === verifyPassword.current.value) {
-            const newUser = {
-                "username": username.current.value,
-                "first_name": firstName.current.value,
-                "last_name": lastName.current.value,
-                "bio": bio.current.value,
-                "password": password.current.value
-            }
+    if (passwordRef.current.value === verifyPasswordRef.current.value) {
+      const newUser = {
+        username: usernameRef.current.value,
+        first_name: firstNameRef.current.value,
+        last_name: lastNameRef.current.value,
+        bio: bioRef.current.value,
+        password: passwordRef.current.value,
+      };
 
-            registerUser(newUser)
-                .then(res => {
-                    if ("token" in res) {
-                        localStorage.setItem("auth_token", res.token)
-                        navigate("/")
-                    }
-                })
-        } else {
-            passwordDialog.current.showModal()
+      registerUser(newUser).then((res) => {
+        if ("token" in res) {
+          localStorage.setItem("auth_token", res.token);
+          navigate("/");
         }
+      });
+    } else {
+      passwordDialogRef.current.showModal();
     }
+  };
 
-    return (
-        <main style={{ textAlign: "center" }}>
+  return (
+    <main style={{ textAlign: "center" }}>
+      <Dialog open={false} ref={passwordDialogRef}>
+        <DialogTitle>Passwords do not match</DialogTitle>
+        <DialogContent>
+          <Button onClick={() => passwordDialogRef.current.close()}>
+            Close
+          </Button>
+        </DialogContent>
+      </Dialog>
 
-            <dialog className="dialog dialog--password" ref={passwordDialog}>
-                <div>Passwords do not match</div>
-                <button className="button--close" onClick={e => passwordDialog.current.close()}>Close</button>
-            </dialog>
+      <form onSubmit={handleRegister}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Register an account
+        </Typography>
 
-            <form className="form--login" onSubmit={handleRegister}>
-                <h1 className="h3 mb-3 font-weight-normal">Register an account</h1>
-                <fieldset>
-                    <label htmlFor="firstName"> First Name </label>
-                    <input ref={firstName} type="text" name="firstName" className="form-control" placeholder="First name" required autoFocus />
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="lastName"> Last Name </label>
-                    <input ref={lastName} type="text" name="lastName"  placeholder="Last name" required className="form-control"/>
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="inputUsername">Username</label>
-                    <input ref={username} type="text" name="username"  placeholder="Username" required className="form-control"/>
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="inputPassword"> Password </label>
-                    <input ref={password} type="password" name="password"  placeholder="Password" required className="form-control"/>
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="verifyPassword"> Verify Password </label>
-                    <input ref={verifyPassword} type="password" name="verifyPassword"  placeholder="Verify password" required className="form-control"/>
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="bio"> Verify Password </label>
-                    <textarea ref={bio} name="bio"  placeholder="Please provide a detailed bio" className="form-control"/>
-                </fieldset>
-                <fieldset style={{
-                    textAlign: "center"
-                }}>
-                    <button className="btn btn-1 btn-sep icon-send" type="submit">Register</button>
-                </fieldset>
-            </form>
-            <section className="link--register">
-                Already registered? <Link to="/login">Login</Link>
-            </section>
-        </main>
-    )
-}
+        <TextField
+          inputRef={firstNameRef}
+          name="firstName"
+          label="First Name"
+          type="text"
+          placeholder="First name"
+          required
+          autoFocus
+          fullWidth
+          margin="normal"
+        />
+
+        <TextField
+          inputRef={lastNameRef}
+          name="lastName"
+          label="Last Name"
+          type="text"
+          placeholder="Last name"
+          required
+          fullWidth
+          margin="normal"
+        />
+
+        <TextField
+          inputRef={usernameRef}
+          name="username"
+          label="Username"
+          type="text"
+          placeholder="Username"
+          required
+          fullWidth
+          margin="normal"
+        />
+
+        <TextField
+          inputRef={passwordRef}
+          name="password"
+          label="Password"
+          type="password"
+          placeholder="Password"
+          required
+          fullWidth
+          margin="normal"
+        />
+
+        <TextField
+          inputRef={verifyPasswordRef}
+          name="verifyPassword"
+          label="Verify Password"
+          type="password"
+          placeholder="Verify password"
+          required
+          fullWidth
+          margin="normal"
+        />
+
+        <TextField
+        fullWidth
+          inputRef={bioRef}
+          name="bio"
+          label="Bio"
+          placeholder="Please provide a detailed bio"
+          multiline
+          rows={4}
+        />
+
+        <Button variant="contained" type="submit">
+          Register
+        </Button>
+      </form>
+
+      <Typography variant="body1" component="section" className="link--register">
+        Already registered? <Link to="/login">Login</Link>
+      </Typography>
+    </main>
+  );
+};

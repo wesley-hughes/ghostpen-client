@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import {
   IconButton,
   InputAdornment,
@@ -34,16 +34,16 @@ export const LetterLibrary = () => {
   const [editSnackbarOpen, setEditSnackbarOpen] = useState(false);
   const [deleteSnackbarOpen, setDeleteSnackbarOpen] = useState(false);
   const [copySnackbarOpen, setCopySnackbarOpen] = useState(false);
-  const [sortBy, setSortBy] = useState(""); // State for selected sorting option
+  const [sortBy, setSortBy] = useState(""); 
 
-  const modalRef = useRef(null);
-
+  
   useEffect(() => {
     fetchLetters();
+    // eslint-disable-next-line
   }, [contactFilter, sortBy]);
 
   const fetchLetters = () => {
-    getLetters(sortBy, contactFilter) // Pass the sortBy value to the API for sorting
+    getLetters(sortBy, contactFilter) 
       .then((data) => {
         const filteredData = data.filter((letter) => {
           const contactFullName = `${letter.contact.first_name} ${letter.contact.last_name}`;
@@ -103,10 +103,6 @@ export const LetterLibrary = () => {
 
   const closeModal = () => {
     setSelectedLetter(null);
-  };
-
-  const handleEditSnackbarClose = () => {
-    setEditSnackbarOpen(false);
   };
 
   const handleSortByChange = (event) => {
@@ -202,14 +198,13 @@ export const LetterLibrary = () => {
           letter={selectedLetter}
           closeModal={closeModal}
           onLetterUpdate={handleLetterUpdate}
-          ref={modalRef}
         />
       )}
 
       <Snackbar
         open={editSnackbarOpen}
         autoHideDuration={3000}
-        onClose={handleEditSnackbarClose}
+        onClose={() => setEditSnackbarOpen(false)}
         message="Letter updated successfully"
       />
       <Snackbar
