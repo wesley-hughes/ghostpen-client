@@ -22,10 +22,11 @@ import {
   DeleteOutline,
   FileCopyOutlined,
 } from "@mui/icons-material";
-import { getLetters, deleteLetter } from "../../managers/LetterManager";
+import { getLetters, deleteLetter, getUserLetters } from "../../managers/LetterManager";
 import { LetterUpdateModal } from "./LetterUpdateModal";
 import { copyToClipboard } from "../utils/copyToClipboard";
 import { ClearOutlined } from "@mui/icons-material";
+import { getUser } from "../../managers/UserManager";
 
 export const LetterLibrary = () => {
   const [filteredLetters, setFilteredLetters] = useState([]);
@@ -35,15 +36,14 @@ export const LetterLibrary = () => {
   const [deleteSnackbarOpen, setDeleteSnackbarOpen] = useState(false);
   const [copySnackbarOpen, setCopySnackbarOpen] = useState(false);
   const [sortBy, setSortBy] = useState(""); 
+  const [userId, setUserId] = useState("")
 
-  
   useEffect(() => {
-    fetchLetters();
-    // eslint-disable-next-line
-  }, [contactFilter, sortBy]);
+    getUser().then((data) => setUserId(data.id))
+  }, []);
 
   const fetchLetters = () => {
-    getLetters(sortBy, contactFilter) 
+    getUserLetters(userId, sortBy, contactFilter) 
       .then((data) => {
         const filteredData = data.filter((letter) => {
           const contactFullName = `${letter.contact.first_name} ${letter.contact.last_name}`;
@@ -77,6 +77,12 @@ export const LetterLibrary = () => {
       })
       .catch((error) => console.error("Error fetching letters:", error));
   };
+
+  useEffect(() => {
+    if (userId !== "") {
+    fetchLetters(userId)};
+    // eslint-disable-next-line
+  }, [userId, contactFilter, sortBy]);
 
   const handleDelete = (letterId) => {
     deleteLetter(letterId)

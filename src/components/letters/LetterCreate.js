@@ -8,7 +8,7 @@ import {
 import { Autocomplete } from "@mui/material";
 import { styled } from "@mui/system";
 import { ghostInput } from "../../managers/GhostManager";
-import { getContacts } from "../../managers/ContactManager";
+import { getContacts, getUserContacts } from "../../managers/ContactManager";
 import { getTones } from "../../managers/ToneManager";
 import { getUser } from "../../managers/UserManager";
 import { createLetter } from "../../managers/LetterManager";
@@ -29,19 +29,24 @@ export const LetterCreate = () => {
   const [selectedContact, setSelectedContact] = useState(null);
   const [tones, setTones] = useState([]);
   const [selectedTones, setSelectedTones] = useState([]);
-  const [user, setUser] = useState({});
   const [letterPurpose, setLetterPurpose] = useState("");
   const [letterObj, setLetterObj] = useState(null);
   const [letterLength, setLetterLength] = useState("");
   const [letterSaveSnackbar, setLetterSaveSnackbar] = useState(false);
+  const [user, setUser] = useState({});
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     getUser().then((data) => setUser(data));
   }, []);
+  useEffect(() => {
+    getUser().then((data) => setUserId(data.id));
+  }, []);
 
   useEffect(() => {
-    getContacts().then((data) => setContacts(data));
-  }, []);
+    if (userId !== ""){
+    getUserContacts(userId).then((data) => setContacts(data))} 
+  }, [userId]);
 
   useEffect(() => {
     getTones().then((data) => setTones(data));

@@ -7,6 +7,13 @@ export const getContacts = () => {
     },
   }).then((res) => res.json());
 };
+export const getUserContacts = (userId) => {
+  return fetch(`http://localhost:8000/contacts?user=${userId}`, {
+    headers: {
+      Authorization: `Token ${getToken()}`,
+    },
+  }).then((res) => res.json());
+};
 
 export const getContactById = (id) => {
   return fetch(`http://localhost:8000/contacts/${id}`, {

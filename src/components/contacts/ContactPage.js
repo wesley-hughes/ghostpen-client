@@ -18,16 +18,17 @@ import {
 } from "@mui/material";
 import {
   getContactById,
-  getContacts,
   deleteContact,
   createContact,
   updateContact,
+  getUserContacts,
 } from "../../managers/ContactManager";
 import { getTags } from "../../managers/TagManager";
 import { ContactForm } from "./ContactForm";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AddIcon from "@mui/icons-material/Add";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import { getUser } from "../../managers/UserManager";
 
 export const ContactPage = () => {
   const [contacts, setContacts] = useState([]);
@@ -39,19 +40,26 @@ export const ContactPage = () => {
   const [editSnackbarOpen, setEditSnackbarOpen] = useState(false);
   const [createSnackbarOpen, setCreateSnackbarOpen] = useState(false);
   const [deleteSnackbarOpen, setDeleteSnackbarOpen] = useState(false);
+  const [userId, setUserId] = useState("");
 
+  useEffect(() => {
+    getUser().then((data) => setUserId(data.id))
+  }, []);
+
+  
+  const fetchContacts = () => {
+    if (userId !== "") {
+    getUserContacts(userId)
+    .then((data) =>
+    setContacts(data.sort((a, b) => a.last_name.localeCompare(b.last_name)))
+    )
+    .catch((error) => console.error("Error fetching contacts:", error))}
+  };
+  
   useEffect(() => {
     fetchContacts();
     fetchTags();
-  }, []);
-
-  const fetchContacts = () => {
-    getContacts()
-      .then((data) =>
-        setContacts(data.sort((a, b) => a.last_name.localeCompare(b.last_name)))
-      )
-      .catch((error) => console.error("Error fetching contacts:", error));
-  };
+  }, [userId]);
 
   const fetchTags = () => {
     getTags()
