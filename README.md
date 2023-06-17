@@ -8,8 +8,6 @@ Welcome to the GhostPen repository! This is the front-end portion of the GhostPe
 - [Features](#features)
 - [Getting Started](#getting-started)
   - [Installation](#installation)
-  - [Configuration](#configuration)
-  - [Running the Application](#running-the-application)
 - [Technologies Used](#technologies-used)
 
 
@@ -32,14 +30,16 @@ To get started with the GhostPen frontend, follow the instructions below.
 ### Installation
 
 1. Clone the repository to your local machine:
-   ```bash git clone git@github.com:wesley-hughes/ghostpen-server.git
-
+   ```bash
+   git clone git@github.com:wesley-hughes/ghostpen-server.git
 2. Navigate to the project directory:
-   ```bash cd ghostpen-client
+   ```bash
+   cd ghostpen-client
 3. Install the dependencies:
-   ```bash npm install
-   ```bash npm install @mui/material @emotion/react @emotion/styled
-   ```bash npm start
+   ```bash
+   npm install
+   npm install @mui/material @emotion/react @emotion/styled
+   npm start
 For more information on React and Material UI:
 [![React](https://img.shields.io/badge/-React-61DAFB?style=flat&logo=react&logoColor=white)](https://legacy.reactjs.org/docs/getting-started.html)
 [![Material UI](https://img.shields.io/badge/-Material_UI-0081CB?style=flat&logo=material-ui&logoColor=white)](https://mui.com/material-ui/getting-started/installation/)
