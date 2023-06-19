@@ -18,6 +18,13 @@ export const getLetters = () => {
     },
   }).then((res) => res.json());
 };
+export const getUserLetters = (userId) => {
+  return fetch(`http://localhost:8000/letters?user=${userId}`, {
+    headers: {
+      Authorization: `Token ${getToken()}`,
+    },
+  }).then((res) => res.json());
+};
 
 export const deleteLetter = (letterId) => {
   return fetch(`http://localhost:8000/letters/${letterId}`, {

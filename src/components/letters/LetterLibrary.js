@@ -16,16 +16,18 @@ import {
   FormControl,
   InputLabel,
   Box,
+  Tooltip,
 } from "@mui/material";
 import {
   EditOutlined,
   DeleteOutline,
   FileCopyOutlined,
 } from "@mui/icons-material";
-import { getLetters, deleteLetter } from "../../managers/LetterManager";
+import { deleteLetter, getUserLetters } from "../../managers/LetterManager";
 import { LetterUpdateModal } from "./LetterUpdateModal";
 import { copyToClipboard } from "../utils/copyToClipboard";
 import { ClearOutlined } from "@mui/icons-material";
+import { getUser } from "../../managers/UserManager";
 
 export const LetterLibrary = () => {
   const [filteredLetters, setFilteredLetters] = useState([]);
@@ -35,15 +37,14 @@ export const LetterLibrary = () => {
   const [deleteSnackbarOpen, setDeleteSnackbarOpen] = useState(false);
   const [copySnackbarOpen, setCopySnackbarOpen] = useState(false);
   const [sortBy, setSortBy] = useState(""); 
+  const [userId, setUserId] = useState("");
 
-  
   useEffect(() => {
-    fetchLetters();
-    // eslint-disable-next-line
-  }, [contactFilter, sortBy]);
+    getUser().then((data) => setUserId(data.id));
+  }, []);
 
   const fetchLetters = () => {
-    getLetters(sortBy, contactFilter) 
+    getUserLetters(userId, sortBy, contactFilter) 
       .then((data) => {
         const filteredData = data.filter((letter) => {
           const contactFullName = `${letter.contact.first_name} ${letter.contact.last_name}`;
@@ -77,6 +78,13 @@ export const LetterLibrary = () => {
       })
       .catch((error) => console.error("Error fetching letters:", error));
   };
+
+  useEffect(() => {
+    if (userId !== "") {
+      fetchLetters();
+    }
+    // eslint-disable-next-line
+  }, [userId, contactFilter, sortBy]);
 
   const handleDelete = (letterId) => {
     deleteLetter(letterId)
@@ -170,21 +178,30 @@ export const LetterLibrary = () => {
                   <TableCell>{letter.date}</TableCell>
                   <TableCell>{`${letter.contact.first_name} ${letter.contact.last_name}`}</TableCell>
                   <TableCell>
-                    <IconButton size="small" onClick={() => handleEdit(letter)}>
-                      <EditOutlined fontSize="small" />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      onClick={() => handleDelete(letter.id)}
-                    >
-                      <DeleteOutline fontSize="small" />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      onClick={() => handleCopy(letter.letter_body)}
-                    >
-                      <FileCopyOutlined fontSize="small" />
-                    </IconButton>
+                    <Tooltip title="Edit">
+                      <IconButton
+                        size="small"
+                        onClick={() => handleEdit(letter)}
+                      >
+                        <EditOutlined fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete">
+                      <IconButton
+                        size="small"
+                        onClick={() => handleDelete(letter.id)}
+                      >
+                        <DeleteOutline fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Copy">
+                      <IconButton
+                        size="small"
+                        onClick={() => handleCopy(letter.letter_body)}
+                      >
+                        <FileCopyOutlined fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               ))}
