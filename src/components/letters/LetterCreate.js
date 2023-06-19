@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  CircularProgress,
-  Snackbar,
-  TextField,
-} from "@mui/material";
+import { Button, CircularProgress, FormControl, InputLabel, MenuItem, Select, Snackbar, TextField } from "@mui/material";
 import { Autocomplete } from "@mui/material";
 import { styled } from "@mui/system";
 import { ghostInput } from "../../managers/GhostManager";
-import { getContacts, getUserContacts } from "../../managers/ContactManager";
+import { getUserContacts } from "../../managers/ContactManager";
 import { getTones } from "../../managers/ToneManager";
 import { getUser } from "../../managers/UserManager";
 import { createLetter } from "../../managers/LetterManager";
@@ -20,7 +15,6 @@ const FormContainer = styled("form")({
   maxWidth: "400px",
   margin: "auto",
 });
-
 
 export const LetterCreate = () => {
   const [loading, setLoading] = useState(false);
@@ -44,8 +38,9 @@ export const LetterCreate = () => {
   }, []);
 
   useEffect(() => {
-    if (userId !== ""){
-    getUserContacts(userId).then((data) => setContacts(data))} 
+    if (userId !== "") {
+      getUserContacts(userId).then((data) => setContacts(data));
+    }
   }, [userId]);
 
   useEffect(() => {
@@ -128,6 +123,12 @@ export const LetterCreate = () => {
 
   const sortedTones = tones.sort((a, b) => a.label.localeCompare(b.label));
 
+  const lengths=[
+    { value: "Short (100 words or less)", label: "Short" },
+    { value: "Medium (100-300 words)", label: "Medium" },
+    { value: "Long (more than 300 words)", label: "Long" },
+  ]
+
   return (
     <FormContainer onSubmit={handleAIResponseGenerate}>
       <Autocomplete
@@ -162,21 +163,21 @@ export const LetterCreate = () => {
         rows={4}
         placeholder="Enter your message"
       />
-      <Autocomplete
-        fullWidth
-        options={[
-          { value: "Short (100 words or less)", label: "Short" },
-          { value: "Medium (100-300 words)", label: "Medium" },
-          { value: "Long (more than 300 words)", label: "Long" },
-        ]}
-        value={
-          letterLength ? { value: letterLength, label: letterLength } : null
-        }
-        onChange={(e, value) => setLetterLength(value ? value.value : "")}
-        renderInput={(params) => (
-          <TextField {...params} label="Letter Length" />
-        )}
-      />
+<FormControl fullWidth>
+  <InputLabel id="letter-length-label">Letter Length</InputLabel>
+  <Select
+    labelId="letter-length-label"
+    value={letterLength}
+    onChange={(e) => setLetterLength(e.target.value)}
+    label="Letter Length"
+  >
+    {lengths.map((length) => (
+      <MenuItem key={length.value} value={length.value}>
+        {length.label}
+      </MenuItem>
+    ))}
+  </Select>
+</FormControl>
       <Button
         type="button"
         onClick={(e) => handleAIResponseGenerate(e)}

@@ -1,13 +1,24 @@
-import { Avatar, IconButton, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
+import React, { useState } from "react";
+import {
+  AppBar,
+  Avatar,
+  IconButton,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu as MenuIcon } from "@mui/icons-material";
-import { useState } from "react";
-import AppBar from '@mui/material/AppBar';
+import { Menu as MenuIcon, Brightness4, Brightness7 } from "@mui/icons-material";
+import { useTheme } from "@mui/material/styles";
+import { Divider } from "@mui/material";
 
-export const NavBar = () => {
+
+export const NavBar = ({ toggleTheme, themeMode }) => {
   const navigate = useNavigate();
   const [anchorElMenu, setAnchorElMenu] = useState(null);
   const [anchorElAvatar, setAnchorElAvatar] = useState(null);
+  const theme = useTheme();
 
   const handleMenuOpen = (event) => {
     setAnchorElMenu(event.currentTarget);
@@ -47,6 +58,13 @@ export const NavBar = () => {
         </Typography>
         <div>
           <IconButton
+            onClick={toggleTheme}
+            color="inherit"
+            aria-label="toggle theme"
+          >
+            {themeMode === "light" ? <Brightness4 /> : <Brightness7 />}
+          </IconButton>
+          <IconButton
             edge="end"
             color="inherit"
             aria-haspopup="true"
@@ -54,7 +72,7 @@ export const NavBar = () => {
             aria-controls="avatar-menu"
             aria-label="account menu"
           >
-            <Avatar src={'./images/ghost.svg'}/>
+            <Avatar src={"./images/ghost.svg"} className="avatar" />
           </IconButton>
           <Menu
             id="menu-appbar"
@@ -71,13 +89,25 @@ export const NavBar = () => {
             open={Boolean(anchorElMenu)}
             onClose={handleMenuClose}
           >
-            <MenuItem component={Link} to="/letter" onClick={handleMenuClose}>
+            <MenuItem
+              component={Link}
+              to="/letter"
+              onClick={handleMenuClose}
+            >
               Write a letter
             </MenuItem>
-            <MenuItem component={Link} to="/library" onClick={handleMenuClose}>
+            <MenuItem
+              component={Link}
+              to="/library"
+              onClick={handleMenuClose}
+            >
               Letter Library
             </MenuItem>
-            <MenuItem component={Link} to="/contact" onClick={handleMenuClose}>
+            <MenuItem
+              component={Link}
+              to="/contact"
+              onClick={handleMenuClose}
+            >
               Manage Contacts
             </MenuItem>
           </Menu>
@@ -96,20 +126,32 @@ export const NavBar = () => {
             open={Boolean(anchorElAvatar)}
             onClose={handleAvatarClose}
           >
-            <MenuItem component={Link} to="/profile" onClick={handleAvatarClose}>
+            <MenuItem
+              component={Link}
+              to="/profile"
+              onClick={handleAvatarClose}
+            >
               Edit Profile
             </MenuItem>
             {localStorage.getItem("auth_token") !== null ? (
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             ) : (
-              <>
-                <MenuItem component={Link} to="/login" onClick={handleAvatarClose}>
+              <div key={`menu-items`}>
+                <MenuItem
+                  component={Link}
+                  to="/login"
+                  onClick={handleAvatarClose}
+                >
                   Login
                 </MenuItem>
-                <MenuItem component={Link} to="/register" onClick={handleAvatarClose}>
+                <MenuItem
+                  component={Link}
+                  to="/register"
+                  onClick={handleAvatarClose}
+                >
                   Register
                 </MenuItem>
-              </>
+              </div>
             )}
           </Menu>
         </div>
