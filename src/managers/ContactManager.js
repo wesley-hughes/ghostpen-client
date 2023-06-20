@@ -8,7 +8,7 @@ export const getContacts = () => {
   }).then((res) => res.json());
 };
 export const getUserContacts = () => {
-  return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/contacts/mycontacts`, {
+  return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/contacts?mycontacts`, {
     headers: {
       Authorization: `Token ${getToken()}`,
     },
