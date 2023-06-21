@@ -1,7 +1,7 @@
 import { getToken } from "../components/utils/getToken";
 
 export const getTags = () => {
-  return fetch("http://localhost:8000/tags", {
+  return fetch("https://ghost-pen-32f1099a7abd.herokuapp.com/tags", {
     headers: {
       Authorization: `Token ${getToken()}`,
     },
@@ -9,7 +9,7 @@ export const getTags = () => {
 };
 
 export const getTagById = (id) => {
-  return fetch(`http://localhost:8000/tags/${id}`, {
+  return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/tags/${id}`, {
     headers: {
       Authorization: `Token ${getToken()}`,
     },
