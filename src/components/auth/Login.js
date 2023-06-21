@@ -48,10 +48,24 @@ export const Login = () => {
       </Dialog>
 
       <Paper elevation={2} sx={{ padding: "24px" }}>
-        <Typography variant="h4" align="center" gutterBottom>
+      <Typography
+          variant="h4"
+          align="center"
+          gutterBottom
+          sx={{
+            color: "#38423D",
+            fontWeight: "bold",
+            textTransform: "uppercase",
+          }}
+        >
           GhostPen
         </Typography>
-        <Typography variant="h6" align="center" gutterBottom>
+        <Typography
+          variant="h6"
+          align="center"
+          gutterBottom
+          sx={{ color: "#526A66", textTransform: "uppercase" }}
+        >
           Please sign in
         </Typography>
 
