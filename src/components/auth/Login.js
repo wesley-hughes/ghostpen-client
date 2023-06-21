@@ -48,7 +48,7 @@ export const Login = () => {
       </Dialog>
 
       <Paper elevation={2} sx={{ padding: "24px" }}>
-      <Typography
+        <Typography
           variant="h4"
           align="center"
           gutterBottom
@@ -73,7 +73,7 @@ export const Login = () => {
           <Grid container spacing={2} sx={{ marginTop: 4 }}>
             <Grid item xs={12}>
               <FormControl fullWidth>
-                <FormLabel>Email</FormLabel>
+                <FormLabel sx={{ marginBottom: 1 }}>Email</FormLabel>
                 <TextField
                   inputRef={username}
                   type="username"
@@ -86,7 +86,7 @@ export const Login = () => {
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth>
-                <FormLabel>Password</FormLabel>
+                <FormLabel sx={{ marginBottom: 1 }}>Password</FormLabel>
                 <TextField
                   inputRef={password}
                   type="password"
@@ -104,7 +104,11 @@ export const Login = () => {
           </Grid>
         </form>
 
-        <Typography variant="body1" align="center" sx={{ marginTop: 2 }}>
+        <Typography
+          variant="body1"
+          align="center"
+          sx={{ marginTop: 2, color: "#526A66" }}
+        >
           <Link to="/register">Not a member yet?</Link>
         </Typography>
       </Paper>
