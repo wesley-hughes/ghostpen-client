@@ -37,7 +37,7 @@ export const Login = () => {
   };
 
   return (
-    <Container maxWidth="xs" sx={{ backgroundColor: "#f9f9f9", padding: "24px" }}>
+    <Container maxWidth="xs" sx={{ backgroundColor: "transparent", padding: "24px", marginTop: "30px" }}>
       <Dialog
         open={false}
         onClose={() => invalidDialog.current.close()}
