@@ -25,19 +25,21 @@ export const Login = () => {
       username: username.current.value,
       password: password.current.value,
     };
-    loginUser(user)
-      .then((res) => {
-        if ("valid" in res && res.valid && "token" in res) {
-          localStorage.setItem("auth_token", res.token);
-          navigate("/");
-        } else {
-          invalidDialog.current.showModal();
-        }
-      });
+    loginUser(user).then((res) => {
+      if ("valid" in res && res.valid && "token" in res) {
+        localStorage.setItem("auth_token", res.token);
+        navigate("/");
+      } else {
+        invalidDialog.current.showModal();
+      }
+    });
   };
 
   return (
-    <Container maxWidth="xs" sx={{ backgroundColor: "transparent", padding: "24px", marginTop: "30px" }}>
+    <Container
+      maxWidth="xs"
+      sx={{ backgroundColor: "transparent", padding: "24px", marginTop: "30px" }}
+    >
       <Dialog
         open={false}
         onClose={() => invalidDialog.current.close()}
@@ -107,7 +109,17 @@ export const Login = () => {
         <Typography
           variant="body1"
           align="center"
-          sx={{ marginTop: 2, color: "#526A66" }}
+          sx={{
+            marginTop: 2,
+            color: "#526A66",
+            "& a": {
+              color: "#617a5b",
+              textDecoration: "none",
+              "&:hover": {
+                textDecoration: "underline",
+              },
+            },
+          }}
         >
           <Link to="/register">Not a member yet?</Link>
         </Typography>
