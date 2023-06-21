@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Button, CircularProgress, FormControl, InputLabel, MenuItem, Select, Snackbar, TextField } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Snackbar,
+  TextField,
+} from "@mui/material";
 import { Autocomplete } from "@mui/material";
 import { styled } from "@mui/system";
 import { ghostInput } from "../../managers/GhostManager";
@@ -29,18 +38,14 @@ export const LetterCreate = () => {
   const [letterLength, setLetterLength] = useState("");
   const [letterSaveSnackbar, setLetterSaveSnackbar] = useState(false);
   const [user, setUser] = useState({});
-  // const [userId, setUserId] = useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     getUser().then((data) => setUser(data));
   }, []);
-  // useEffect(() => {
-  //   getUser().then((data) => setUserId(data.id));
-  // }, []);
 
   useEffect(() => {
-      getUserContacts().then((data) => setContacts(data));
+    getUserContacts().then((data) => setContacts(data));
   }, []);
 
   useEffect(() => {
@@ -123,32 +128,32 @@ export const LetterCreate = () => {
 
   const sortedTones = tones.sort((a, b) => a.label.localeCompare(b.label));
 
-  const lengths=[
+  const lengths = [
     { value: "Short (100 words or less)", label: "Short" },
     { value: "Medium (100-300 words)", label: "Medium" },
     { value: "Long (more than 300 words)", label: "Long" },
-  ]
+  ];
 
   return (
     <FormContainer onSubmit={handleAIResponseGenerate}>
-      { contacts !== [] ?
-      <Autocomplete
-        fullWidth
-        options={sortedContacts}
-        getOptionLabel={(contact) =>
-          `${contact.first_name} ${contact.last_name}`
-        }
-        value={selectedContact}
-        onChange={handleContactChange}
-        renderInput={(params) => (
-          <TextField {...params} label="Select Contact" sx={{ mt: 4 }} />
-        )}
-        limitTags={4}
-      /> :
-      <div>Please create a new <Link onClick={() => navigate("/contacts")} />
+     {contacts.length === 0 ? (
+  <div>
+    Please create a new <Link to="/contacts">CONTACT</Link>.
+  </div>
+) : (
+  <Autocomplete
+    fullWidth
+    options={sortedContacts}
+    getOptionLabel={(contact) => `${contact.first_name} ${contact.last_name}`}
+    value={selectedContact}
+    onChange={handleContactChange}
+    renderInput={(params) => (
+      <TextField {...params} label="Select Contact" sx={{ mt: 4 }} />
+    )}
+    limitTags={4}
+  />
+)}
 
-      </div>
-        }
       <Autocomplete
         fullWidth
         multiple
@@ -168,21 +173,21 @@ export const LetterCreate = () => {
         rows={4}
         placeholder="Enter your message"
       />
-<FormControl fullWidth>
-  <InputLabel id="letter-length-label">Letter Length</InputLabel>
-  <Select
-    labelId="letter-length-label"
-    value={letterLength}
-    onChange={(e) => setLetterLength(e.target.value)}
-    label="Letter Length"
-  >
-    {lengths.map((length) => (
-      <MenuItem key={length.value} value={length.value}>
-        {length.label}
-      </MenuItem>
-    ))}
-  </Select>
-</FormControl>
+      <FormControl fullWidth>
+        <InputLabel id="letter-length-label">Letter Length</InputLabel>
+        <Select
+          labelId="letter-length-label"
+          value={letterLength}
+          onChange={(e) => setLetterLength(e.target.value)}
+          label="Letter Length"
+        >
+          {lengths.map((length) => (
+            <MenuItem key={length.value} value={length.value}>
+              {length.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <Button
         type="button"
         onClick={(e) => handleAIResponseGenerate(e)}
