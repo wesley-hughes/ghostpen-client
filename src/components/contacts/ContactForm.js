@@ -77,18 +77,21 @@ export const ContactForm = ({ contact, onSave, handleSubmit }) => {
           <FormContainer>
             <TextField
               label="First Name"
+              required
               sx={{ mt: 2 }}
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
             />
             <TextField
               label="Last Name"
+              required
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
             />
             <TextField
-              label="Bio"
+              label="Contact Bio"
               multiline
+              required
               rows={4}
               value={bio}
               onChange={(e) => setBio(e.target.value)}

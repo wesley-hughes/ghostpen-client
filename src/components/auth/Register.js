@@ -85,9 +85,9 @@ export const Register = () => {
         <TextField
           inputRef={usernameRef}
           name="username"
-          label="Username"
+          label="Email"
           type="text"
-          placeholder="Username"
+          placeholder="Email"
           required
           fullWidth
           margin="normal"
@@ -119,7 +119,7 @@ export const Register = () => {
         fullWidth
           inputRef={bioRef}
           name="bio"
-          label="Bio"
+          label="Personal Bio"
           placeholder="Please provide a detailed bio"
           multiline
           rows={4}
