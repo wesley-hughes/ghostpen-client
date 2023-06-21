@@ -8,7 +8,7 @@ import {
   Select,
   Snackbar,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 import { Autocomplete } from "@mui/material";
 import { styled } from "@mui/system";
@@ -47,7 +47,6 @@ export const LetterCreate = () => {
   const [letterLength, setLetterLength] = useState("");
   const [letterSaveSnackbar, setLetterSaveSnackbar] = useState(false);
   const [user, setUser] = useState({});
-
 
   useEffect(() => {
     getUser().then((data) => setUser(data));
@@ -145,28 +144,31 @@ export const LetterCreate = () => {
 
   return (
     <FormContainer onSubmit={handleAIResponseGenerate}>
-     {contacts.length === 0 ? (
-        <NoContactsMessage>
+      {contacts.length === 0 ? (
+        <div>
           <Typography variant="body1">
             You don't have any contacts yet.
           </Typography>
           <Typography variant="body2">
-            Click <StyledLink to="/contacts">HERE</StyledLink> to create one now.
+            Click <StyledLink to="/contacts">HERE</StyledLink> to create one
+            now.
           </Typography>
-        </NoContactsMessage>
-) : (
-  <Autocomplete
-    fullWidth
-    options={sortedContacts}
-    getOptionLabel={(contact) => `${contact.first_name} ${contact.last_name}`}
-    value={selectedContact}
-    onChange={handleContactChange}
-    renderInput={(params) => (
-      <TextField {...params} label="Select Contact" sx={{ mt: 4 }} />
-    )}
-    limitTags={4}
-  />
-)}
+        </div>
+      ) : (
+        <Autocomplete
+          fullWidth
+          options={sortedContacts}
+          getOptionLabel={(contact) =>
+            `${contact.first_name} ${contact.last_name}`
+          }
+          value={selectedContact}
+          onChange={handleContactChange}
+          renderInput={(params) => (
+            <TextField {...params} label="Select Contact" sx={{ mt: 4 }} />
+          )}
+          limitTags={4}
+        />
+      )}
 
       <Autocomplete
         fullWidth
