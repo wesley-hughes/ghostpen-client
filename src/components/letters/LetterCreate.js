@@ -8,6 +8,7 @@ import {
   Select,
   Snackbar,
   TextField,
+  Typography
 } from "@mui/material";
 import { Autocomplete } from "@mui/material";
 import { styled } from "@mui/system";
@@ -16,7 +17,7 @@ import { getUserContacts } from "../../managers/ContactManager";
 import { getTones } from "../../managers/ToneManager";
 import { getUser } from "../../managers/UserManager";
 import { createLetter } from "../../managers/LetterManager";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const FormContainer = styled("form")({
   display: "flex",
@@ -24,6 +25,14 @@ const FormContainer = styled("form")({
   gap: "16px",
   maxWidth: "400px",
   margin: "auto",
+});
+
+const StyledLink = styled(Link)({
+  color: "#577046",
+  textDecoration: "none",
+  "&:hover": {
+    textDecoration: "underline",
+  },
 });
 
 export const LetterCreate = () => {
@@ -38,7 +47,7 @@ export const LetterCreate = () => {
   const [letterLength, setLetterLength] = useState("");
   const [letterSaveSnackbar, setLetterSaveSnackbar] = useState(false);
   const [user, setUser] = useState({});
-  const navigate = useNavigate();
+
 
   useEffect(() => {
     getUser().then((data) => setUser(data));
@@ -137,9 +146,14 @@ export const LetterCreate = () => {
   return (
     <FormContainer onSubmit={handleAIResponseGenerate}>
      {contacts.length === 0 ? (
-  <div>
-    Please create a new <Link to="/contacts">CONTACT</Link>.
-  </div>
+        <NoContactsMessage>
+          <Typography variant="body1">
+            You don't have any contacts yet.
+          </Typography>
+          <Typography variant="body2">
+            Click <StyledLink to="/contacts">HERE</StyledLink> to create one now.
+          </Typography>
+        </NoContactsMessage>
 ) : (
   <Autocomplete
     fullWidth
