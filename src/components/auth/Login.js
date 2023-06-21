@@ -6,6 +6,8 @@ import {
   Dialog,
   FormControl,
   FormLabel,
+  Grid,
+  Paper,
   TextField,
   Typography,
 } from "@mui/material";
@@ -35,7 +37,7 @@ export const Login = () => {
   };
 
   return (
-    <Container maxWidth="xs">
+    <Container maxWidth="xs" sx={{ backgroundColor: "#f9f9f9", padding: "24px" }}>
       <Dialog
         open={false}
         onClose={() => invalidDialog.current.close()}
@@ -45,45 +47,53 @@ export const Login = () => {
         <Button onClick={() => invalidDialog.current.close()}>Close</Button>
       </Dialog>
 
-      {/* <Typography variant="h4" align="center" gutterBottom>
-        GhostPen
-      </Typography>
-      <Typography variant="h6" align="center" gutterBottom>
-        Please sign in
-      </Typography> */}
+      <Paper elevation={2} sx={{ padding: "24px" }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          GhostPen
+        </Typography>
+        <Typography variant="h6" align="center" gutterBottom>
+          Please sign in
+        </Typography>
 
-      <form onSubmit={handleLogin}>
-        <FormControl fullWidth>
-          <FormLabel htmlFor="inputUsername" sx={{ mt: 4 }}>Email</FormLabel>
-          <TextField
-            inputRef={username}
-            type="username"
-            id="username"
-            placeholder="Email"
-            required
-            autoFocus
-          />
-        </FormControl>
+        <form onSubmit={handleLogin}>
+          <Grid container spacing={2} sx={{ marginTop: 4 }}>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <FormLabel>Email</FormLabel>
+                <TextField
+                  inputRef={username}
+                  type="username"
+                  id="username"
+                  placeholder="Email"
+                  required
+                  autoFocus
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <FormLabel>Password</FormLabel>
+                <TextField
+                  inputRef={password}
+                  type="password"
+                  id="password"
+                  placeholder="Password"
+                  required
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <Button type="submit" variant="contained" fullWidth>
+                Sign In
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
 
-        <FormControl fullWidth>
-          <FormLabel htmlFor="inputPassword">Password</FormLabel>
-          <TextField
-            inputRef={password}
-            type="password"
-            id="password"
-            placeholder="Password"
-            required
-          />
-        </FormControl>
-
-        <Button type="submit" variant="contained" sx={{ mt: 2 }}>
-          Sign In
-        </Button>
-      </form>
-
-      <Typography variant="body1" align="center" sx={{ mt: 2 }}>
-        <Link to="/register">Not a member yet?</Link>
-      </Typography>
+        <Typography variant="body1" align="center" sx={{ marginTop: 2 }}>
+          <Link to="/register">Not a member yet?</Link>
+        </Typography>
+      </Paper>
     </Container>
   );
 };

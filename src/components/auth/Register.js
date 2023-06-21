@@ -8,6 +8,8 @@ import {
   DialogContent,
   TextField,
   Typography,
+  Paper,
+  Container,
 } from "@mui/material";
 
 export const Register = () => {
@@ -44,95 +46,96 @@ export const Register = () => {
   };
 
   return (
-    <main style={{ textAlign: "center" }}>
+    <Container maxWidth="xs" sx={{ textAlign: "center" }}>
       <Dialog open={false} ref={passwordDialogRef}>
         <DialogTitle>Passwords do not match</DialogTitle>
         <DialogContent>
-          <Button onClick={() => passwordDialogRef.current.close()}>
-            Close
-          </Button>
+          <Button onClick={() => passwordDialogRef.current.close()}>Close</Button>
         </DialogContent>
       </Dialog>
 
-      <form onSubmit={handleRegister}>
+      <Paper elevation={2} sx={{ padding: "24px" }}>
         <Typography variant="h4" component="h1" gutterBottom>
           Register an account
         </Typography>
 
-        <TextField
-          inputRef={firstNameRef}
-          name="firstName"
-          label="First Name"
-          type="text"
-          placeholder="First name"
-          required
-          autoFocus
-          fullWidth
-          margin="normal"
-        />
+        <form onSubmit={handleRegister}>
+          <TextField
+            inputRef={firstNameRef}
+            name="firstName"
+            label="First Name"
+            type="text"
+            placeholder="First name"
+            required
+            autoFocus
+            fullWidth
+            margin="normal"
+          />
 
-        <TextField
-          inputRef={lastNameRef}
-          name="lastName"
-          label="Last Name"
-          type="text"
-          placeholder="Last name"
-          required
-          fullWidth
-          margin="normal"
-        />
+          <TextField
+            inputRef={lastNameRef}
+            name="lastName"
+            label="Last Name"
+            type="text"
+            placeholder="Last name"
+            required
+            fullWidth
+            margin="normal"
+          />
 
-        <TextField
-          inputRef={usernameRef}
-          name="username"
-          label="Email"
-          type="text"
-          placeholder="Email"
-          required
-          fullWidth
-          margin="normal"
-        />
+          <TextField
+            inputRef={usernameRef}
+            name="username"
+            label="Email"
+            type="text"
+            placeholder="Email"
+            required
+            fullWidth
+            margin="normal"
+          />
 
-        <TextField
-          inputRef={passwordRef}
-          name="password"
-          label="Password"
-          type="password"
-          placeholder="Password"
-          required
-          fullWidth
-          margin="normal"
-        />
+          <TextField
+            inputRef={passwordRef}
+            name="password"
+            label="Password"
+            type="password"
+            placeholder="Password"
+            required
+            fullWidth
+            margin="normal"
+          />
 
-        <TextField
-          inputRef={verifyPasswordRef}
-          name="verifyPassword"
-          label="Verify Password"
-          type="password"
-          placeholder="Verify password"
-          required
-          fullWidth
-          margin="normal"
-        />
+          <TextField
+            inputRef={verifyPasswordRef}
+            name="verifyPassword"
+            label="Verify Password"
+            type="password"
+            placeholder="Verify password"
+            required
+            fullWidth
+            margin="normal"
+          />
 
-        <TextField
-        fullWidth
-          inputRef={bioRef}
-          name="bio"
-          label="Personal Bio"
-          placeholder="Please provide a detailed bio"
-          multiline
-          rows={4}
-        />
+          <TextField
+            inputRef={bioRef}
+            name="bio"
+            label="Personal Bio"
+            placeholder="Please provide a detailed bio"
+            multiline
+            rows={4}
+            fullWidth
+            margin="normal"
+          />
 
-        <Button variant="contained" type="submit">
-          Register
-        </Button>
-      </form>
+          <Button variant="contained" type="submit" fullWidth>
+            Register
+          </Button>
+        </form>
 
-      <Typography variant="body1" component="section" className="link--register">
-        Already registered? <Link to="/login">Login</Link>
-      </Typography>
-    </main>
+        <Typography variant="body1" component="section" sx={{ marginTop: 2 }}>
+          Already registered? <Link to="/login">Login</Link>
+        </Typography>
+      </Paper>
+    </Container>
   );
 };
