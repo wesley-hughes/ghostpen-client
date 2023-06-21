@@ -147,12 +147,9 @@ export const LetterCreate = () => {
       {contacts.length === 0 ? (
         <div>
           <Typography variant="body1">
-            You don't have any contacts yet.
+            You don't have any contacts yet, <StyledLink to="/contact">Create Contact</StyledLink>.
           </Typography>
-          <Typography variant="body2">
-            Click <StyledLink to="/contacts">HERE</StyledLink> to create one
-            now.
-          </Typography>
+
         </div>
       ) : (
         <Autocomplete
