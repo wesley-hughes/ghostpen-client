@@ -7,6 +7,7 @@ import { getUserContacts } from "../../managers/ContactManager";
 import { getTones } from "../../managers/ToneManager";
 import { getUser } from "../../managers/UserManager";
 import { createLetter } from "../../managers/LetterManager";
+import { Link, useNavigate } from "react-router-dom";
 
 const FormContainer = styled("form")({
   display: "flex",
@@ -29,6 +30,7 @@ export const LetterCreate = () => {
   const [letterSaveSnackbar, setLetterSaveSnackbar] = useState(false);
   const [user, setUser] = useState({});
   // const [userId, setUserId] = useState("");
+  const navigate = useNavigate()
 
   useEffect(() => {
     getUser().then((data) => setUser(data));
@@ -129,6 +131,7 @@ export const LetterCreate = () => {
 
   return (
     <FormContainer onSubmit={handleAIResponseGenerate}>
+      { contacts !== [] ?
       <Autocomplete
         fullWidth
         options={sortedContacts}
@@ -141,7 +144,11 @@ export const LetterCreate = () => {
           <TextField {...params} label="Select Contact" sx={{ mt: 4 }} />
         )}
         limitTags={4}
-      />
+      /> :
+      <div>Please create a new <Link onClick={() => navigate("/contacts")} />
+
+      </div>
+        }
       <Autocomplete
         fullWidth
         multiple
