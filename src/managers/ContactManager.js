@@ -1,14 +1,14 @@
 import { getToken } from "../components/utils/getToken";
 
 export const getContacts = () => {
-  return fetch("https://ghost-pen-32f1099a7abd.herokuapp.com/contacts", {
+  return fetch("http://localhost:8000/contacts", {
     headers: {
       Authorization: `Token ${getToken()}`,
     },
   }).then((res) => res.json());
 };
 export const getUserContacts = () => {
-  return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/contacts?mycontacts`, {
+  return fetch(`http://localhost:8000/contacts?mycontacts`, {
     headers: {
       Authorization: `Token ${getToken()}`,
     },
@@ -16,7 +16,7 @@ export const getUserContacts = () => {
 };
 
 export const getContactById = (id) => {
-  return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/contacts/${id}`, {
+  return fetch(`http://localhost:8000/contacts/${id}`, {
     headers: {
       Authorization: `Token ${getToken()}`,
     },
@@ -24,7 +24,7 @@ export const getContactById = (id) => {
 };
 
 export const createContact = (newContact) => {
-  return fetch("https://ghost-pen-32f1099a7abd.herokuapp.com/contacts", {
+  return fetch("http://localhost:8000/contacts", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -35,7 +35,7 @@ export const createContact = (newContact) => {
 };
 
 export const updateContact = (contactId, updatedContact) => {
-  return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/contacts/${contactId}`, {
+  return fetch(`http://localhost:8000/contacts/${contactId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -46,7 +46,7 @@ export const updateContact = (contactId, updatedContact) => {
 };
 
 export const deleteContact = (contactId) => {
-  return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/contacts/${contactId}`, {
+  return fetch(`http://localhost:8000/contacts/${contactId}`, {
     method: "DELETE",
     headers: {
       Authorization: `Token ${getToken()}`,

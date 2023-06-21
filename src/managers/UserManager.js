@@ -1,7 +1,7 @@
 import { getToken } from "../components/utils/getToken";
 
 export const getUser = () => {
-  return fetch("https://ghost-pen-32f1099a7abd.herokuapp.com/profile/my-profile", {
+  return fetch("http://localhost:8000/profile/my-profile", {
     method: "GET",
     headers: {
       Authorization: `Token ${getToken()}`,
@@ -9,7 +9,7 @@ export const getUser = () => {
   }).then((response) => response.json());
 };
 export const getUserProfile = (userId) => {
-  return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/ghostusers/${userId}`, {
+  return fetch(`http://localhost:8000/ghostusers/${userId}`, {
     method: "GET",
     headers: {
       Authorization: `Token ${getToken()}`,
@@ -18,7 +18,7 @@ export const getUserProfile = (userId) => {
 };
 
 export const updateUser = (userId, updatedUser) => {
-  return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/ghostusers/${userId}`, {
+  return fetch(`http://localhost:8000/ghostusers/${userId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

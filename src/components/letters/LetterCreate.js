@@ -28,20 +28,18 @@ export const LetterCreate = () => {
   const [letterLength, setLetterLength] = useState("");
   const [letterSaveSnackbar, setLetterSaveSnackbar] = useState(false);
   const [user, setUser] = useState({});
-  const [userId, setUserId] = useState("");
+  // const [userId, setUserId] = useState("");
 
   useEffect(() => {
     getUser().then((data) => setUser(data));
   }, []);
-  useEffect(() => {
-    getUser().then((data) => setUserId(data.id));
-  }, []);
+  // useEffect(() => {
+  //   getUser().then((data) => setUserId(data.id));
+  // }, []);
 
   useEffect(() => {
-    if (userId !== "") {
-      getUserContacts(userId).then((data) => setContacts(data));
-    }
-  }, [userId]);
+      getUserContacts().then((data) => setContacts(data));
+  }, []);
 
   useEffect(() => {
     getTones().then((data) => setTones(data));
