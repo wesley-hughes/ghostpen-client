@@ -17,8 +17,8 @@ export const getUserProfile = (userId) => {
   }).then((response) => response.json());
 };
 
-export const updateUser = (userId, updatedUser) => {
-  return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/ghostusers/${userId}`, {
+export const updateUser = (updatedUser) => {
+  return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/profile/edit`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

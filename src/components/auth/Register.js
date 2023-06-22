@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../../managers/AuthManager";
 import {
@@ -19,7 +19,7 @@ export const Register = () => {
   const passwordRef = useRef();
   const verifyPasswordRef = useRef();
   const bioRef = useRef();
-  const passwordDialogRef = useRef();
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleRegister = (e) => {
@@ -41,16 +41,20 @@ export const Register = () => {
         }
       });
     } else {
-      passwordDialogRef.current.showModal();
+      setIsPasswordDialogOpen(true);
     }
+  };
+
+  const handleClosePasswordDialog = () => {
+    setIsPasswordDialogOpen(false);
   };
 
   return (
     <Container maxWidth="xs" sx={{ textAlign: "center" }}>
-      <Dialog open={false} ref={passwordDialogRef}>
+      <Dialog open={isPasswordDialogOpen} onClose={handleClosePasswordDialog}>
         <DialogTitle>Passwords do not match</DialogTitle>
         <DialogContent>
-          <Button onClick={() => passwordDialogRef.current.close()}>Close</Button>
+          <Button onClick={handleClosePasswordDialog}>Close</Button>
         </DialogContent>
       </Dialog>
 

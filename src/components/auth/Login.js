@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Button,
@@ -16,7 +16,7 @@ import { loginUser } from "../../managers/AuthManager";
 export const Login = () => {
   const username = useRef("");
   const password = useRef("");
-  const invalidDialog = useRef(null);
+  const [isInvalidDialogOpen, setIsInvalidDialogOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
@@ -30,9 +30,13 @@ export const Login = () => {
         localStorage.setItem("auth_token", res.token);
         navigate("/");
       } else {
-        invalidDialog.current.showModal();
+        setIsInvalidDialogOpen(true);
       }
     });
+  };
+
+  const handleCloseInvalidDialog = () => {
+    setIsInvalidDialogOpen(false);
   };
 
   return (
@@ -40,13 +44,9 @@ export const Login = () => {
       maxWidth="xs"
       sx={{ backgroundColor: "transparent", padding: "24px", marginTop: "30px" }}
     >
-      <Dialog
-        open={false}
-        onClose={() => invalidDialog.current.close()}
-        ref={invalidDialog}
-      >
+      <Dialog open={isInvalidDialogOpen} onClose={handleCloseInvalidDialog}>
         <Typography variant="body1">Username or password was not valid.</Typography>
-        <Button onClick={() => invalidDialog.current.close()}>Close</Button>
+        <Button onClick={handleCloseInvalidDialog}>Close</Button>
       </Dialog>
 
       <Paper elevation={2} sx={{ padding: "24px" }}>

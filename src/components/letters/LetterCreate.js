@@ -17,7 +17,7 @@ import { getUserContacts } from "../../managers/ContactManager";
 import { getTones } from "../../managers/ToneManager";
 import { getUser } from "../../managers/UserManager";
 import { createLetter } from "../../managers/LetterManager";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const FormContainer = styled("form")({
   display: "flex",
@@ -47,6 +47,7 @@ export const LetterCreate = () => {
   const [letterLength, setLetterLength] = useState("");
   const [letterSaveSnackbar, setLetterSaveSnackbar] = useState(false);
   const [user, setUser] = useState({});
+  const navigate = useNavigate()
 
   useEffect(() => {
     getUser().then((data) => setUser(data));
@@ -55,6 +56,12 @@ export const LetterCreate = () => {
   useEffect(() => {
     getUserContacts().then((data) => setContacts(data));
   }, []);
+
+  useEffect(() => {
+    if (contacts.length === 0) {
+      navigate("/contact");
+    }
+  }, [contacts, navigate]);
 
   useEffect(() => {
     getTones().then((data) => setTones(data));
