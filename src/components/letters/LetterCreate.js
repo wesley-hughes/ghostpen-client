@@ -113,6 +113,7 @@ export const LetterCreate = () => {
     setSelectedTones([]);
     setLetterPurpose("");
     setLetterObj(null);
+    setLetterLength("");
   };
 
   const handleLetterSave = async (e) => {
