@@ -52,7 +52,6 @@ export const LetterCreate = () => {
   const [letterLength, setLetterLength] = useState("");
   const [letterSaveSnackbar, setLetterSaveSnackbar] = useState(false);
   const [user, setUser] = useState({});
-  const navigate = useNavigate();
 
   useEffect(() => {
     getUser().then((data) => setUser(data));
