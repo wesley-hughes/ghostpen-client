@@ -27,9 +27,14 @@ const FormContainer = styled("form")({
   margin: "auto",
 });
 
+const TextContainer = styled("div")({
+  marginTop: "24px",
+});
+
 const StyledLink = styled(Link)({
   color: "#577046",
   textDecoration: "none",
+  fontWeight: "bold",
   "&:hover": {
     textDecoration: "underline",
   },
@@ -47,7 +52,7 @@ export const LetterCreate = () => {
   const [letterLength, setLetterLength] = useState("");
   const [letterSaveSnackbar, setLetterSaveSnackbar] = useState(false);
   const [user, setUser] = useState({});
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     getUser().then((data) => setUser(data));
@@ -56,12 +61,6 @@ export const LetterCreate = () => {
   useEffect(() => {
     getUserContacts().then((data) => setContacts(data));
   }, []);
-
-  useEffect(() => {
-    if (contacts.length === 0) {
-      navigate("/contact");
-    }
-  }, [contacts, navigate]);
 
   useEffect(() => {
     getTones().then((data) => setTones(data));
@@ -151,70 +150,74 @@ export const LetterCreate = () => {
 
   return (
     <FormContainer onSubmit={handleAIResponseGenerate}>
-      {contacts.length === 0 ? (
-        <div>
-          <Typography variant="body1">
-            You don't have any contacts yet, <StyledLink to="/contact">Create Contact</StyledLink>.
-          </Typography>
-
-        </div>
+    {contacts.length === 0 ? (
+      <TextContainer>
+        <Typography variant="body1">
+          You don't have any contacts yet,{" "}
+          <StyledLink to="/contact">Create Contact</StyledLink> to get started.
+        </Typography>
+      </TextContainer>
       ) : (
-        <Autocomplete
-          fullWidth
-          options={sortedContacts}
-          getOptionLabel={(contact) =>
-            `${contact.first_name} ${contact.last_name}`
-          }
-          value={selectedContact}
-          onChange={handleContactChange}
-          renderInput={(params) => (
-            <TextField {...params} label="Select Contact" sx={{ mt: 4 }} />
-          )}
-          limitTags={4}
-        />
-      )}
+        <>
+          <Autocomplete
+            fullWidth
+            options={sortedContacts}
+            getOptionLabel={(contact) =>
+              `${contact.first_name} ${contact.last_name}`
+            }
+            value={selectedContact}
+            onChange={handleContactChange}
+            renderInput={(params) => (
+              <TextField {...params} label="Select Contact" sx={{ mt: 4 }} />
+            )}
+            limitTags={4}
+          />
 
-      <Autocomplete
-        fullWidth
-        multiple
-        options={sortedTones}
-        getOptionLabel={(tone) => tone.label}
-        value={selectedTones}
-        onChange={handleToneChange}
-        renderInput={(params) => <TextField {...params} label="Select Tones" />}
-        limitTags={4}
-      />
-      <TextField
-        fullWidth
-        value={letterPurpose}
-        onChange={(e) => setLetterPurpose(e.target.value)}
-        label="Letter Purpose"
-        multiline
-        rows={4}
-        placeholder="Enter your message"
-      />
-      <FormControl fullWidth>
-        <InputLabel id="letter-length-label">Letter Length</InputLabel>
-        <Select
-          labelId="letter-length-label"
-          value={letterLength}
-          onChange={(e) => setLetterLength(e.target.value)}
-          label="Letter Length"
-        >
-          {lengths.map((length) => (
-            <MenuItem key={length.value} value={length.value}>
-              {length.label}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <Button
-        type="button"
-        onClick={(e) => handleAIResponseGenerate(e)}
-        disabled={loading}
-      >
-        {loading ? <CircularProgress size={24} /> : "Generate Letter"}
-      </Button>
+          <Autocomplete
+            fullWidth
+            multiple
+            options={sortedTones}
+            getOptionLabel={(tone) => tone.label}
+            value={selectedTones}
+            onChange={handleToneChange}
+            renderInput={(params) => (
+              <TextField {...params} label="Select Tones" />
+            )}
+            limitTags={4}
+          />
+          <TextField
+            fullWidth
+            value={letterPurpose}
+            onChange={(e) => setLetterPurpose(e.target.value)}
+            label="Letter Purpose"
+            multiline
+            rows={4}
+            placeholder="Enter your message"
+          />
+          <FormControl fullWidth>
+            <InputLabel id="letter-length-label">Letter Length</InputLabel>
+            <Select
+              labelId="letter-length-label"
+              value={letterLength}
+              onChange={(e) => setLetterLength(e.target.value)}
+              label="Letter Length"
+            >
+              {lengths.map((length) => (
+                <MenuItem key={length.value} value={length.value}>
+                  {length.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button
+            type="button"
+            onClick={(e) => handleAIResponseGenerate(e)}
+            disabled={loading}
+          >
+            {loading ? <CircularProgress size={24} /> : "Generate Letter"}
+          </Button>
+        </>
+      )}
 
       {response && (
         <>
