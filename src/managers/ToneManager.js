@@ -1,7 +1,7 @@
 import { getToken } from "../components/utils/getToken";
 
 export const getTones = () => {
-  return fetch("https://ghost-pen-32f1099a7abd.herokuapp.com/tones", {
+  return fetch("http://localhost:8000/tones", {
     headers: {
       Authorization: `Token ${getToken()}`,
     },
@@ -9,7 +9,7 @@ export const getTones = () => {
 };
 
 export const getToneById = (id) => {
-  return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/tones/${id}`, {
+  return fetch(`http://localhost:8000/tones/${id}`, {
     headers: {
       Authorization: `Token ${getToken()}`,
     },

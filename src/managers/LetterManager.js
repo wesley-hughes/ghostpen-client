@@ -1,7 +1,7 @@
 import { getToken } from "../components/utils/getToken";
 
 export const createLetter = (letterObj) => {
-  return fetch("https://ghost-pen-32f1099a7abd.herokuapp.com/letters", {
+  return fetch("http://localhost:8000/letters", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -12,14 +12,14 @@ export const createLetter = (letterObj) => {
 };
 
 export const getLetters = () => {
-  return fetch("https://ghost-pen-32f1099a7abd.herokuapp.com/letters", {
+  return fetch("http://localhost:8000/letters", {
     headers: {
       Authorization: `Token ${getToken()}`,
     },
   }).then((res) => res.json());
 };
 export const getUserLetters = () => {
-  return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/letters?myletters`, {
+  return fetch(`http://localhost:8000/letters?myletters`, {
     headers: {
       Authorization: `Token ${getToken()}`,
     },
@@ -27,7 +27,7 @@ export const getUserLetters = () => {
 };
 
 export const deleteLetter = (letterId) => {
-  return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/letters/${letterId}`, {
+  return fetch(`http://localhost:8000/letters/${letterId}`, {
     method: "DELETE",
     headers: {
       Authorization: `Token ${getToken()}`,
@@ -36,7 +36,7 @@ export const deleteLetter = (letterId) => {
 };
 
 export const updateLetter = (updatedLetter, letterId) => {
-  return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/letters/${letterId}`, {
+  return fetch(`http://localhost:8000/letters/${letterId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

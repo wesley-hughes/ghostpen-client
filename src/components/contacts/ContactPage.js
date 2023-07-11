@@ -41,12 +41,7 @@ export const ContactPage = () => {
   const [createSnackbarOpen, setCreateSnackbarOpen] = useState(false);
   const [deleteSnackbarOpen, setDeleteSnackbarOpen] = useState(false);
 
-
-
-
-  
   const fetchContacts = () => {
-
     getUserContacts()
     .then((data) =>
     setContacts(data.sort((a, b) => a.last_name.localeCompare(b.last_name)))
