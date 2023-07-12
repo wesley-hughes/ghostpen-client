@@ -110,6 +110,27 @@ export const NavBar = ({ toggleTheme, themeMode }) => {
             >
               Manage Contacts
             </MenuItem>
+            <MenuItem
+              component={Link}
+              to="/campaign"
+              onClick={handleMenuClose}
+            >
+              Manage Campaigns
+            </MenuItem>
+            <MenuItem
+              component={Link}
+              to="/writecampaign"
+              onClick={handleMenuClose}
+            >
+              Write a Campaign
+            </MenuItem>
+            <MenuItem
+              component={Link}
+              to="/tag"
+              onClick={handleMenuClose}
+            >
+              Manage Tags
+            </MenuItem>
           </Menu>
           <Menu
             id="avatar-menu"

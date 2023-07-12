@@ -40,26 +40,19 @@ export const ContactPage = () => {
   const [editSnackbarOpen, setEditSnackbarOpen] = useState(false);
   const [createSnackbarOpen, setCreateSnackbarOpen] = useState(false);
   const [deleteSnackbarOpen, setDeleteSnackbarOpen] = useState(false);
-  const [userId, setUserId] = useState("");
 
-  useEffect(() => {
-    getUser().then((data) => setUserId(data.id))
-  }, []);
-
-  
   const fetchContacts = () => {
-    if (userId !== "") {
-    getUserContacts(userId)
+    getUserContacts()
     .then((data) =>
     setContacts(data.sort((a, b) => a.last_name.localeCompare(b.last_name)))
     )
-    .catch((error) => console.error("Error fetching contacts:", error))}
+    .catch((error) => console.error("Error fetching contacts:", error))
   };
   
   useEffect(() => {
     fetchContacts();
     fetchTags();
-  }, [userId]);
+  }, []);
 
   const fetchTags = () => {
     getTags()

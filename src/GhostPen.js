@@ -24,6 +24,7 @@ const darkTheme = createTheme({
     },
     text: {
       primary: "#eaeaea",
+      secondary: "#c5c5c5",
     },
   },
 });

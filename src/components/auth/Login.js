@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Button,
@@ -6,6 +6,8 @@ import {
   Dialog,
   FormControl,
   FormLabel,
+  Grid,
+  Paper,
   TextField,
   Typography,
 } from "@mui/material";
@@ -14,7 +16,7 @@ import { loginUser } from "../../managers/AuthManager";
 export const Login = () => {
   const username = useRef("");
   const password = useRef("");
-  const invalidDialog = useRef(null);
+  const [isInvalidDialogOpen, setIsInvalidDialogOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
@@ -23,67 +25,105 @@ export const Login = () => {
       username: username.current.value,
       password: password.current.value,
     };
-    loginUser(user)
-      .then((res) => {
-        if ("valid" in res && res.valid && "token" in res) {
-          localStorage.setItem("auth_token", res.token);
-          navigate("/");
-        } else {
-          invalidDialog.current.showModal();
-        }
-      });
+    loginUser(user).then((res) => {
+      if ("valid" in res && res.valid && "token" in res) {
+        localStorage.setItem("auth_token", res.token);
+        navigate("/");
+      } else {
+        setIsInvalidDialogOpen(true);
+      }
+    });
+  };
+
+  const handleCloseInvalidDialog = () => {
+    setIsInvalidDialogOpen(false);
   };
 
   return (
-    <Container maxWidth="xs">
-      <Dialog
-        open={false}
-        onClose={() => invalidDialog.current.close()}
-        ref={invalidDialog}
-      >
+    <Container
+      maxWidth="xs"
+      sx={{ backgroundColor: "transparent", padding: "24px", marginTop: "30px" }}
+    >
+      <Dialog open={isInvalidDialogOpen} onClose={handleCloseInvalidDialog}>
         <Typography variant="body1">Username or password was not valid.</Typography>
-        <Button onClick={() => invalidDialog.current.close()}>Close</Button>
+        <Button onClick={handleCloseInvalidDialog}>Close</Button>
       </Dialog>
 
-      {/* <Typography variant="h4" align="center" gutterBottom>
-        GhostPen
-      </Typography>
-      <Typography variant="h6" align="center" gutterBottom>
-        Please sign in
-      </Typography> */}
+      <Paper elevation={2} sx={{ padding: "24px" }}>
+        <Typography
+          variant="h4"
+          align="center"
+          gutterBottom
+          sx={{
+            color: "#38423D",
+            fontWeight: "bold",
+            textTransform: "uppercase",
+          }}
+        >
+          GhostPen
+        </Typography>
+        <Typography
+          variant="h6"
+          align="center"
+          gutterBottom
+          sx={{ color: "#526A66", textTransform: "uppercase" }}
+        >
+          Please sign in
+        </Typography>
 
-      <form onSubmit={handleLogin}>
-        <FormControl fullWidth>
-          <FormLabel htmlFor="inputUsername" sx={{ mt: 4 }}>Email</FormLabel>
-          <TextField
-            inputRef={username}
-            type="username"
-            id="username"
-            placeholder="Email"
-            required
-            autoFocus
-          />
-        </FormControl>
+        <form onSubmit={handleLogin}>
+          <Grid container spacing={2} sx={{ marginTop: 4 }}>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <FormLabel sx={{ marginBottom: 1 }}>Email</FormLabel>
+                <TextField
+                  inputRef={username}
+                  type="username"
+                  id="username"
+                  placeholder="Email"
+                  required
+                  autoFocus
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <FormLabel sx={{ marginBottom: 1 }}>Password</FormLabel>
+                <TextField
+                  inputRef={password}
+                  type="password"
+                  id="password"
+                  placeholder="Password"
+                  required
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <Button type="submit" variant="contained" fullWidth>
+                Sign In
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
 
-        <FormControl fullWidth>
-          <FormLabel htmlFor="inputPassword">Password</FormLabel>
-          <TextField
-            inputRef={password}
-            type="password"
-            id="password"
-            placeholder="Password"
-            required
-          />
-        </FormControl>
-
-        <Button type="submit" variant="contained" sx={{ mt: 2 }}>
-          Sign In
-        </Button>
-      </form>
-
-      <Typography variant="body1" align="center" sx={{ mt: 2 }}>
-        <Link to="/register">Not a member yet?</Link>
-      </Typography>
+        <Typography
+          variant="body1"
+          align="center"
+          sx={{
+            marginTop: 2,
+            color: "#526A66",
+            "& a": {
+              color: "#617a5b",
+              textDecoration: "none",
+              "&:hover": {
+                textDecoration: "underline",
+              },
+            },
+          }}
+        >
+          <Link to="/register">Not a member yet?</Link>
+        </Typography>
+      </Paper>
     </Container>
   );
 };

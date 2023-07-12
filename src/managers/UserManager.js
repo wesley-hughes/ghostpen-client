@@ -17,8 +17,8 @@ export const getUserProfile = (userId) => {
   }).then((response) => response.json());
 };
 
-export const updateUser = (userId, updatedUser) => {
-  return fetch(`http://localhost:8000/ghostusers/${userId}`, {
+export const updateUser = (updatedUser) => {
+  return fetch(`http://localhost:8000/profile/edit`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

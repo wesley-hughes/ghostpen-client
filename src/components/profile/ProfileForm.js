@@ -4,12 +4,7 @@ import {
   getUserProfile,
   updateUser,
 } from "../../managers/UserManager";
-import {
-  Button,
-  Snackbar,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Snackbar, TextField, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 
 const FormContainer = styled("form")({
@@ -30,17 +25,16 @@ export const ProfileForm = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [bio, setBio] = useState("");
-  const [snackbar, setSnackbar] = useState(false)
+  const [snackbar, setSnackbar] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const userData = await getUser();
-        const userProfileData = await getUserProfile(userData.id);
-        setUser(userProfileData);
-        setFirstName(userProfileData.first_name);
-        setLastName(userProfileData.last_name);
-        setBio(userProfileData.bio);
+        setUser(userData);
+        setFirstName(userData.first_name);
+        setLastName(userData.last_name);
+        setBio(userData.ghostuser.bio);
       } catch (error) {
         console.error("Error:", error);
       }
@@ -54,13 +48,12 @@ export const ProfileForm = () => {
     e.preventDefault();
 
     const updatedUser = {
-      ...user,
       first_name: firstName,
       last_name: lastName,
       bio: bio,
     };
 
-    updateUser(user.id, updatedUser)
+    updateUser(updatedUser)
       .then(() => {
         setSnackbar(true);
       })

@@ -18,8 +18,8 @@ export const getLetters = () => {
     },
   }).then((res) => res.json());
 };
-export const getUserLetters = (userId) => {
-  return fetch(`http://localhost:8000/letters?user=${userId}`, {
+export const getUserLetters = () => {
+  return fetch(`http://localhost:8000/letters?myletters`, {
     headers: {
       Authorization: `Token ${getToken()}`,
     },

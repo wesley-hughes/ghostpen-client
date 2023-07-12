@@ -27,7 +27,6 @@ import { deleteLetter, getUserLetters } from "../../managers/LetterManager";
 import { LetterUpdateModal } from "./LetterUpdateModal";
 import { copyToClipboard } from "../utils/copyToClipboard";
 import { ClearOutlined } from "@mui/icons-material";
-import { getUser } from "../../managers/UserManager";
 
 export const LetterLibrary = () => {
   const [filteredLetters, setFilteredLetters] = useState([]);
@@ -37,22 +36,16 @@ export const LetterLibrary = () => {
   const [deleteSnackbarOpen, setDeleteSnackbarOpen] = useState(false);
   const [copySnackbarOpen, setCopySnackbarOpen] = useState(false);
   const [sortBy, setSortBy] = useState(""); 
-  const [userId, setUserId] = useState("");
-
-  useEffect(() => {
-    getUser().then((data) => setUserId(data.id));
-  }, []);
+ 
 
   const fetchLetters = () => {
-    getUserLetters(userId, sortBy, contactFilter) 
+    getUserLetters(sortBy, contactFilter) 
       .then((data) => {
         const filteredData = data.filter((letter) => {
           const contactFullName = `${letter.contact.first_name} ${letter.contact.last_name}`;
           return contactFullName.toLowerCase().includes(contactFilter.toLowerCase());
         });
-
         let sortedData = filteredData;
-
         switch (sortBy) {
           case "dateAsc":
             sortedData = filteredData.sort((a, b) => a.date.localeCompare(b.date));
@@ -73,18 +66,14 @@ export const LetterLibrary = () => {
           default:
             break;
         }
-
         setFilteredLetters(sortedData);
       })
       .catch((error) => console.error("Error fetching letters:", error));
   };
 
   useEffect(() => {
-    if (userId !== "") {
       fetchLetters();
-    }
-    // eslint-disable-next-line
-  }, [userId, contactFilter, sortBy]);
+  }, [contactFilter, sortBy]);
 
   const handleDelete = (letterId) => {
     deleteLetter(letterId)
@@ -94,25 +83,20 @@ export const LetterLibrary = () => {
       })
       .catch((error) => console.error("Error deleting letter:", error));
   };
-
   const handleCopy = (body) => {
     copyToClipboard(body);
     setCopySnackbarOpen(true);
   };
-
   const handleEdit = (letter) => {
     setSelectedLetter(letter);
   };
-
   const handleLetterUpdate = () => {
     fetchLetters();
     setEditSnackbarOpen(true);
   };
-
   const closeModal = () => {
     setSelectedLetter(null);
   };
-
   const handleSortByChange = (event) => {
     setSortBy(event.target.value);
   };
@@ -142,7 +126,6 @@ export const LetterLibrary = () => {
               ),
             }}
           />
-
           <FormControl fullWidth sx={{ mb: 2 }}>
             <InputLabel>Sort By</InputLabel>
             <Select value={sortBy} onChange={handleSortByChange}>
@@ -155,7 +138,6 @@ export const LetterLibrary = () => {
           </FormControl>
         </Box>
       </Paper>
-
       <Box
         sx={{
           mt: 2,
@@ -217,7 +199,6 @@ export const LetterLibrary = () => {
           onLetterUpdate={handleLetterUpdate}
         />
       )}
-
       <Snackbar
         open={editSnackbarOpen}
         autoHideDuration={3000}
@@ -230,7 +211,6 @@ export const LetterLibrary = () => {
         onClose={() => setDeleteSnackbarOpen(false)}
         message="Letter deleted successfully"
       />
-
       <Snackbar
         open={copySnackbarOpen}
         autoHideDuration={3000}
