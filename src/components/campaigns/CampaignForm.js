@@ -55,7 +55,7 @@ getCampaigns(data).then((res) => setCampaigns(res))
 
   const handleSubmit = () => {
     createCampaign(data).then((res) => setCampaignId(res.id))
-    if(campaignId !== "" && selectedContacts.length > 0){
+    if(selectedContacts.length > 0){
         addTargetedContacts(campaignId, targetData)
     }
   };

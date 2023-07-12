@@ -73,7 +73,6 @@ export const LetterLibrary = () => {
 
   useEffect(() => {
       fetchLetters();
-    // eslint-disable-next-line
   }, [contactFilter, sortBy]);
 
   const handleDelete = (letterId) => {

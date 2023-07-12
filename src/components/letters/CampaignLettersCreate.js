@@ -127,6 +127,7 @@ export const CampaignLettersCreate = () => {
       };
       const userInput = `The letter you are writing is from ${userObj.name}. Here is a bio for your reference: ${userObj.bio}.
         It is being written to ${contactObj.name}. Here is a bio on ${contactObj.name} for your reference: ${contactObj.bio}.
+        This letter is for ${selectedCampaign.description}.
         The purpose of the letter is ${letterPurpose} and the tones of the letter should be ${tonesString}. The length of the letter should be ${letterLength}`;
       const generatedResponse = await ghostInput(userInput);
       const newLetterObj = {
