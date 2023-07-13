@@ -23,57 +23,40 @@ import {
   DeleteOutline,
   FileCopyOutlined,
 } from "@mui/icons-material";
-import { deleteLetter, getUserLetters } from "../../managers/LetterManager";
+import { deleteLetter, getLetters } from "../../managers/LetterManager";
 import { LetterUpdateModal } from "./LetterUpdateModal";
 import { copyToClipboard } from "../utils/copyToClipboard";
 import { ClearOutlined } from "@mui/icons-material";
+import { debounce } from "lodash";
+import { getCampaigns } from "../../managers/CampaignManager";
 
 export const LetterLibrary = () => {
-  const [filteredLetters, setFilteredLetters] = useState([]);
+  const [letters, setLetters] = useState([]);
   const [selectedLetter, setSelectedLetter] = useState(null);
   const [contactFilter, setContactFilter] = useState("");
   const [editSnackbarOpen, setEditSnackbarOpen] = useState(false);
   const [deleteSnackbarOpen, setDeleteSnackbarOpen] = useState(false);
   const [copySnackbarOpen, setCopySnackbarOpen] = useState(false);
-  const [sortBy, setSortBy] = useState(""); 
- 
+  const [campaign, setCampaign] = useState("");
+  const [campaigns, setCampaigns] = useState([]);
 
   const fetchLetters = () => {
-    getUserLetters(sortBy, contactFilter) 
+    getLetters(campaign, contactFilter)
       .then((data) => {
-        const filteredData = data.filter((letter) => {
-          const contactFullName = `${letter.contact.first_name} ${letter.contact.last_name}`;
-          return contactFullName.toLowerCase().includes(contactFilter.toLowerCase());
-        });
-        let sortedData = filteredData;
-        switch (sortBy) {
-          case "dateAsc":
-            sortedData = filteredData.sort((a, b) => a.date.localeCompare(b.date));
-            break;
-          case "dateDesc":
-            sortedData = filteredData.sort((a, b) => b.date.localeCompare(a.date));
-            break;
-          case "lastNameAsc":
-            sortedData = filteredData.sort((a, b) =>
-              a.contact.last_name.localeCompare(b.contact.last_name)
-            );
-            break;
-          case "lastNameDesc":
-            sortedData = filteredData.sort((a, b) =>
-              b.contact.last_name.localeCompare(a.contact.last_name)
-            );
-            break;
-          default:
-            break;
-        }
-        setFilteredLetters(sortedData);
+        setLetters(data);
       })
       .catch((error) => console.error("Error fetching letters:", error));
   };
 
   useEffect(() => {
-      fetchLetters();
-  }, [contactFilter, sortBy]);
+    getCampaigns().then((data) => setCampaigns(data));
+  }, []);
+
+  useEffect(() => {
+    fetchLetters();
+  }, [contactFilter, campaign]);
+
+  const debouncedFetchLetters = debounce(fetchLetters, 300);
 
   const handleDelete = (letterId) => {
     deleteLetter(letterId)
@@ -83,22 +66,27 @@ export const LetterLibrary = () => {
       })
       .catch((error) => console.error("Error deleting letter:", error));
   };
+
   const handleCopy = (body) => {
     copyToClipboard(body);
     setCopySnackbarOpen(true);
   };
+
   const handleEdit = (letter) => {
     setSelectedLetter(letter);
   };
+
   const handleLetterUpdate = () => {
     fetchLetters();
     setEditSnackbarOpen(true);
   };
+
   const closeModal = () => {
     setSelectedLetter(null);
   };
-  const handleSortByChange = (event) => {
-    setSortBy(event.target.value);
+
+  const handleCampaignChange = (event) => {
+    setCampaign(event.target.value);
   };
 
   return (
@@ -108,7 +96,10 @@ export const LetterLibrary = () => {
           <TextField
             label="Contact"
             value={contactFilter}
-            onChange={(e) => setContactFilter(e.target.value)}
+            onChange={(e) => {
+              setContactFilter(e.target.value);
+              debouncedFetchLetters();
+            }}
             placeholder="Search by contact name"
             fullWidth
             sx={{ mb: 2 }}
@@ -127,13 +118,10 @@ export const LetterLibrary = () => {
             }}
           />
           <FormControl fullWidth sx={{ mb: 2 }}>
-            <InputLabel>Sort By</InputLabel>
-            <Select value={sortBy} onChange={handleSortByChange}>
+            <InputLabel>Campaign</InputLabel>
+            <Select value={campaign} onChange={handleCampaignChange}>
               <MenuItem value="">None</MenuItem>
-              <MenuItem value="dateAsc">Date Ascending</MenuItem>
-              <MenuItem value="dateDesc">Date Descending</MenuItem>
-              <MenuItem value="lastNameAsc">Last Name Ascending</MenuItem>
-              <MenuItem value="lastNameDesc">Last Name Descending</MenuItem>
+              {campaigns.map((cam) => <MenuItem key={cam.id} value={cam.id}>{cam.label}</MenuItem>)}
             </Select>
           </FormControl>
         </Box>
@@ -155,7 +143,7 @@ export const LetterLibrary = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredLetters.map((letter) => (
+              {letters.map((letter) => (
                 <TableRow key={letter.id}>
                   <TableCell>{letter.date}</TableCell>
                   <TableCell>{`${letter.contact.first_name} ${letter.contact.last_name}`}</TableCell>

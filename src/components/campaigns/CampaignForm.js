@@ -53,12 +53,28 @@ getCampaigns(data).then((res) => setCampaigns(res))
     setSelectedContacts(event.target.value);
   };
 
-  const handleSubmit = () => {
-    createCampaign(data).then((res) => setCampaignId(res.id))
-    if(selectedContacts.length > 0){
-        addTargetedContacts(campaignId, targetData)
+  // const handleSubmit = () => {
+  //   createCampaign(data).then((res) => setCampaignId(res.id))
+  //   if(selectedContacts.length > 0){
+  //       addTargetedContacts(campaignId, targetData)
+  //   }
+  // };
+  const handleSubmit = async () => {
+    try {
+      const createdCampaign = await createCampaign(data);
+      const campaignId = createdCampaign.id;
+  
+      if (selectedContacts.length > 0) {
+        const targetData = { contacts: selectedContacts };
+        await addTargetedContacts(campaignId, targetData);
+      }
+  
+      setCampaignId(campaignId);
+    } catch (error) {
+      console.error("Error creating campaign:", error);
     }
   };
+
 
   return (
     <>
