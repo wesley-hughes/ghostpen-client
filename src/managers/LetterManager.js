@@ -11,15 +11,16 @@ export const createLetter = (letterObj) => {
   }).then((res) => res.json());
 };
 
-export const getLetters = () => {
-  return fetch("http://localhost:8000/letters", {
-    headers: {
-      Authorization: `Token ${getToken()}`,
-    },
-  }).then((res) => res.json());
-};
-export const getUserLetters = () => {
-  return fetch(`http://localhost:8000/letters?myletters`, {
+export const getLetters = (campaign, contactFilter) => {
+  let url = `http://localhost:8000/letters`;
+  if (campaign) {
+    url += `?campaign=${campaign}`;
+  }
+  if (contactFilter) {
+    url += `?contact=${contactFilter}`;
+  }
+
+  return fetch(url, {
     headers: {
       Authorization: `Token ${getToken()}`,
     },

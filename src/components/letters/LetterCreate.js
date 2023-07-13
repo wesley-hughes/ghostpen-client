@@ -13,7 +13,7 @@ import {
 import { Autocomplete } from "@mui/material";
 import { styled } from "@mui/system";
 import { ghostInput } from "../../managers/GhostManager";
-import { getUserContacts } from "../../managers/ContactManager";
+import { getContacts } from "../../managers/ContactManager";
 import { getTones } from "../../managers/ToneManager";
 import { getUser } from "../../managers/UserManager";
 import { createLetter } from "../../managers/LetterManager";
@@ -60,7 +60,7 @@ export const LetterCreate = () => {
   }, []);
 
   useEffect(() => {
-    getUserContacts().then((data) => {
+    getContacts().then((data) => {
       setContacts(data);
       setContactsLoading(false);
     });
@@ -69,12 +69,6 @@ export const LetterCreate = () => {
   useEffect(() => {
     getTones().then((data) => setTones(data));
   }, []);
-
-  useEffect(() => {
-    if (letterObj) {
-      setLetterSaveSnackbar(true);
-    }
-  }, [letterObj]);
 
   const handleAIResponseGenerate = async (e) => {
     e.preventDefault();
@@ -122,10 +116,10 @@ export const LetterCreate = () => {
     try {
       await createLetter(letterObj);
       clearForm();
+      setLetterSaveSnackbar(true);
     } catch (error) {
       console.error("Error:", error);
     }
-    setLetterSaveSnackbar(true);
   };
 
   const handleContactChange = (event, value) => {
@@ -227,36 +221,32 @@ export const LetterCreate = () => {
           <TextField
             fullWidth
             value={response}
-            label="Generated Response"
+            onChange={(e) => setResponse(e.target.value)}
+            label="Edit the letter"
             multiline
-            rows={6}
-            placeholder="Generated response will appear here"
-            InputProps={{
-              readOnly: true,
-            }}
-            sx={{ mt: 4 }}
+            rows={10}
+            placeholder="Edit the letter"
+            autoFocus
+            autoComplete="off"
+            inputProps={{ style: { resize: "vertical" } }}
           />
-          <TextContainer>
-            <Typography variant="body2">
-              <strong>Note:</strong> This response is generated using artificial intelligence. Please review and make any necessary edits before sending.
-            </Typography>
-          </TextContainer>
           <Button
-            type="button"
-            variant="contained"
-            onClick={handleLetterSave}
-            disabled={!letterObj}
+            onClick={() => {
+              handleLetterSave();
+              setLetterSaveSnackbar(true);
+            }}
+            disabled={loading}
           >
-            Save Letter
+            {loading ? <CircularProgress size={44} /> : "Save Letter"}
           </Button>
-          <Snackbar
-            open={letterSaveSnackbar}
-            autoHideDuration={3000}
-            onClose={() => setLetterSaveSnackbar(false)}
-            message="Letter saved!"
-          />
         </>
       )}
+      <Snackbar
+        open={letterSaveSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setLetterSaveSnackbar(false)}
+        message="Letter saved"
+      />
     </FormContainer>
   );
 };

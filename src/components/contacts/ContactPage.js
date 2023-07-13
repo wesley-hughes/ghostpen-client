@@ -21,7 +21,7 @@ import {
   deleteContact,
   createContact,
   updateContact,
-  getUserContacts,
+  getContacts,
 } from "../../managers/ContactManager";
 import { getTags } from "../../managers/TagManager";
 import { ContactForm } from "./ContactForm";
@@ -42,7 +42,7 @@ export const ContactPage = () => {
   const [deleteSnackbarOpen, setDeleteSnackbarOpen] = useState(false);
 
   const fetchContacts = () => {
-    getUserContacts()
+    getContacts()
     .then((data) =>
     setContacts(data.sort((a, b) => a.last_name.localeCompare(b.last_name)))
     )
