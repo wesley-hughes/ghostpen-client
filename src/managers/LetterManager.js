@@ -1,7 +1,7 @@
 import { getToken } from "../components/utils/getToken";
 
 export const createLetter = (letterObj) => {
-  return fetch("http://localhost:8000/letters", {
+  return fetch("https://ghost-pen-32f1099a7abd.herokuapp.com/letters", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -12,7 +12,7 @@ export const createLetter = (letterObj) => {
 };
 
 export const getLetters = (campaign, contactFilter) => {
-  let url = `http://localhost:8000/letters`;
+  let url = `https://ghost-pen-32f1099a7abd.herokuapp.com/letters`;
   if (campaign) {
     url += `?campaign=${campaign}`;
   }
@@ -28,7 +28,7 @@ export const getLetters = (campaign, contactFilter) => {
 };
 
 export const deleteLetter = (letterId) => {
-  return fetch(`http://localhost:8000/letters/${letterId}`, {
+  return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/letters/${letterId}`, {
     method: "DELETE",
     headers: {
       Authorization: `Token ${getToken()}`,
@@ -37,7 +37,7 @@ export const deleteLetter = (letterId) => {
 };
 
 export const updateLetter = (updatedLetter, letterId) => {
-  return fetch(`http://localhost:8000/letters/${letterId}`, {
+  return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/letters/${letterId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
