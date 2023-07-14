@@ -2,7 +2,7 @@ import { getToken } from "../components/utils/getToken";
 
 export const ghostInput = async (userInput) => {
   try {
-    const response = await fetch("http://localhost:8000/ghost", {
+    const response = await fetch("https://ghost-pen-32f1099a7abd.herokuapp.com/ghost", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

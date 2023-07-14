@@ -1,7 +1,7 @@
 import { getToken } from "../components/utils/getToken";
 
 export const getCampaigns = () => {
-    return fetch("http://localhost:8000/campaigns", {
+    return fetch("https://ghost-pen-32f1099a7abd.herokuapp.com/campaigns", {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Token ${getToken()}`,
@@ -10,7 +10,7 @@ export const getCampaigns = () => {
   };
 
   export const createCampaign = (newCampaign) => {
-    return fetch("http://localhost:8000/campaigns", {
+    return fetch("https://ghost-pen-32f1099a7abd.herokuapp.com/campaigns", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -21,7 +21,7 @@ export const getCampaigns = () => {
   };
 
   export const deleteCampaign = (campaignId) => {
-    return fetch(`http://localhost:8000/campaigns/${campaignId}`, {
+    return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/campaigns/${campaignId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Token ${getToken()}`,
@@ -30,7 +30,7 @@ export const getCampaigns = () => {
   };
 
   export const updateCampaign = (campaignId, updatedCampaign) => {
-    return fetch(`http://localhost:8000/campaigns/${campaignId}`, {
+    return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/campaigns/${campaignId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -41,7 +41,7 @@ export const getCampaigns = () => {
   };
 
   export const getCampaignById = (id) => {
-    return fetch(`http://localhost:8000/campaigns/${id}`, {
+    return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/campaigns/${id}`, {
       headers: {
         Authorization: `Token ${getToken()}`,
       },
@@ -49,7 +49,7 @@ export const getCampaigns = () => {
   };
 
   export const addTargetedContacts = (id, selectedContacts) => {
-    return fetch(`http://localhost:8000/campaigns/${id}/target`, {
+    return fetch(`https://ghost-pen-32f1099a7abd.herokuapp.com/campaigns/${id}/target`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
