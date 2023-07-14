@@ -176,7 +176,7 @@ export const LetterCreate = () => {
           value={selectedTones}
           onChange={handleToneChange}
           renderInput={(params) => <TextField {...params} label="Select Tones" />}
-          limitTags={4}
+          limitTags={10}
         />
         <TextField
           fullWidth

@@ -4,15 +4,15 @@ import {
   Button,
   FormControl,
   InputLabel,
-  Select,
-  MenuItem,
-  Dialog,
-  DialogTitle,
-  DialogContent,
+  Autocomplete,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { getContacts } from "../../managers/ContactManager";
-import { addTargetedContacts, createCampaign, getCampaigns } from "../../managers/CampaignManager";
+import {
+  addTargetedContacts,
+  createCampaign,
+  getCampaigns,
+} from "../../managers/CampaignManager";
 
 const FormContainer = styled("form")({
   display: "flex",
@@ -31,12 +31,12 @@ export const CampaignForm = () => {
   const [campaigns, setCampaigns] = useState([]);
 
   useEffect(() => {
-getCampaigns(data).then((res) => setCampaigns(res))
-  },[])
+    getCampaigns(data).then((res) => setCampaigns(res));
+  }, []);
 
   const data = {
     label: label,
-    description: description
+    description: description,
   };
 
   const targetData = {
@@ -49,32 +49,25 @@ getCampaigns(data).then((res) => setCampaigns(res))
       .catch((error) => console.error("Error retrieving contacts:", error));
   }, []);
 
-  const handleContactChange = (event) => {
-    setSelectedContacts(event.target.value);
+  const handleContactChange = (event, values) => {
+    setSelectedContacts(values);
   };
 
-  // const handleSubmit = () => {
-  //   createCampaign(data).then((res) => setCampaignId(res.id))
-  //   if(selectedContacts.length > 0){
-  //       addTargetedContacts(campaignId, targetData)
-  //   }
-  // };
   const handleSubmit = async () => {
     try {
       const createdCampaign = await createCampaign(data);
       const campaignId = createdCampaign.id;
-  
+
       if (selectedContacts.length > 0) {
         const targetData = { contacts: selectedContacts };
         await addTargetedContacts(campaignId, targetData);
       }
-  
+
       setCampaignId(campaignId);
     } catch (error) {
       console.error("Error creating campaign:", error);
     }
   };
-
 
   return (
     <>
@@ -96,26 +89,21 @@ getCampaigns(data).then((res) => setCampaigns(res))
             onChange={(e) => setDescription(e.target.value)}
           />
           <FormControl>
-            <InputLabel>Targeted Contacts</InputLabel>
-            <Select
+          <Autocomplete
               multiple
+              options={contacts}
+              getOptionLabel={(contact) => contact.name}
               value={selectedContacts}
               onChange={handleContactChange}
-              renderValue={(selected) =>
-                selected
-                  .map((contactId) => {
-                    const contact = contacts.find((contact) => contact.id === contactId)
-                    return contact ? `${contact.first_name} ${contact.last_name}` : "";
-                  })
-                  .join(", ")
-              }
-            >
-              {contacts.map((contact) => (
-                <MenuItem key={contact.id} value={contact.id}>
-                  {contact.first_name} {contact.last_name}
-                </MenuItem>
-              ))}
-            </Select>
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Targeted Contacts"
+                  sx={{ mt: 2 }}
+                  />
+                  )}
+              limitTags={10}
+            />
           </FormControl>
           <Button
             type="button"
