@@ -9,6 +9,7 @@ import { ProfileForm } from "../components/profile/ProfileForm";
 import { TagForm } from "../components/tags/TagForm";
 import { CampaignForm } from "../components/campaigns/CampaignForm";
 import { CampaignLettersCreate } from "../components/letters/CampaignLettersCreate";
+import { CampaignList } from "../components/campaigns/CampaignList";
 
 export const ApplicationViews = () => {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ export const ApplicationViews = () => {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/campaign" element={<CampaignForm />} />
         <Route path="/writecampaign" element={<CampaignLettersCreate />} />
+        <Route path="/campaignlist" element={<CampaignList />} />
         <Route path="/profile" element={<ProfileForm />} />
         <Route path="/tag" element={<TagForm />} />
       </Route>

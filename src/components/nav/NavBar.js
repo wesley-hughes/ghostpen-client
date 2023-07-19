@@ -126,10 +126,10 @@ export const NavBar = ({ toggleTheme, themeMode }) => {
             </MenuItem>
             <MenuItem
               component={Link}
-              to="/tag"
+              to="/campaignlist"
               onClick={handleMenuClose}
             >
-              Manage Tags
+              Campaign List
             </MenuItem>
           </Menu>
           <Menu

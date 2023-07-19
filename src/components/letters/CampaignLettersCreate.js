@@ -51,7 +51,7 @@ export const CampaignLettersCreate = () => {
   const [user, setUser] = useState({});
   const [lettersToWrite, setLettersToWrite] = useState([]);
 
-  //setting up dependencies
+  //setting up date
   const currentDate = new Date().toISOString().split("T")[0];
   //define strings for different lengths to input after selecting from dropdown
   const lengths = [
