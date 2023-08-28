@@ -83,8 +83,7 @@ export const LetterCreate = () => {
         bio: selectedContact.bio,
       };
       const tones = selectedTones.map((tone) => tone.label).join(", ");
-      const userInput = `The letter you are writing is from ${userObj.name}. Here is a bio for your reference: ${userObj.bio}.
-      It is being written to ${contact.name}. Here is a bio on ${contact.name} for your reference: ${contact.bio}.
+      const userInput = `The letter you are writing is from ${userObj.name}. Here is a bio for your reference: ${userObj.bio}. It is being written to ${contact.name}. Here is a bio on ${contact.name} for your reference: ${contact.bio}.
       The purpose of the letter is ${letterPurpose} and the tones of the letter should be ${tones}. The length of the letter should be ${letterLength}`;
       const generatedResponse = await ghostInput(userInput);
       setResponse(generatedResponse);

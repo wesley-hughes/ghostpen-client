@@ -145,6 +145,7 @@ export const CampaignLettersCreate = () => {
 
   return (
     <>
+    <FormContainer>
       <Autocomplete
         fullWidth
         options={campaigns}
@@ -210,6 +211,7 @@ export const CampaignLettersCreate = () => {
       ) : (
         ""
       )}
+      </FormContainer>
     </>
   );
 };

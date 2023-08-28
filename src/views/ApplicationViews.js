@@ -7,9 +7,8 @@ import { ContactPage } from "../components/contacts/ContactPage";
 import { LetterLibrary } from "../components/letters/LetterLibrary";
 import { ProfileForm } from "../components/profile/ProfileForm";
 import { TagForm } from "../components/tags/TagForm";
-import { CampaignForm } from "../components/campaigns/CampaignForm";
 import { CampaignLettersCreate } from "../components/letters/CampaignLettersCreate";
-import { CampaignList } from "../components/campaigns/CampaignList";
+import { CampaignPage } from "../components/campaigns/CampaignList";
 
 export const ApplicationViews = () => {
   const navigate = useNavigate();
@@ -32,9 +31,8 @@ export const ApplicationViews = () => {
         <Route path="/letter" element={<LetterCreate />} />
         <Route path="/library" element={<LetterLibrary />} />
         <Route path="/contact" element={<ContactPage />} />
-        <Route path="/campaign" element={<CampaignForm />} />
+        <Route path="/campaign" element={<CampaignPage />} />
         <Route path="/writecampaign" element={<CampaignLettersCreate />} />
-        <Route path="/campaignlist" element={<CampaignList />} />
         <Route path="/profile" element={<ProfileForm />} />
         <Route path="/tag" element={<TagForm />} />
       </Route>

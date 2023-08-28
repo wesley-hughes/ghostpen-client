@@ -22,13 +22,25 @@ import {
   EditOutlined,
   DeleteOutline,
   FileCopyOutlined,
+  ClearOutlined,
 } from "@mui/icons-material";
 import { deleteLetter, getLetters } from "../../managers/LetterManager";
 import { LetterUpdateModal } from "./LetterUpdateModal";
 import { copyToClipboard } from "../utils/copyToClipboard";
-import { ClearOutlined } from "@mui/icons-material";
 import { debounce } from "lodash";
 import { getCampaigns } from "../../managers/CampaignManager";
+import { styled } from "@mui/system";
+
+const FormContainer = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  maxWidth: "400px",
+  margin: "auto",
+});
+
+const TextContainer = styled("div")({
+  marginTop: "24px",
+});
 
 export const LetterLibrary = () => {
   const [letters, setLetters] = useState([]);
@@ -90,51 +102,47 @@ export const LetterLibrary = () => {
   };
 
   return (
-    <div className="letter-library">
-      <Paper elevation={3} sx={{ p: 2 }}>
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <TextField
-            label="Contact"
-            value={contactFilter}
-            onChange={(e) => {
-              setContactFilter(e.target.value);
-              debouncedFetchLetters();
-            }}
-            placeholder="Search by contact name"
-            fullWidth
-            sx={{ mb: 2 }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    size="small"
-                    onClick={() => setContactFilter("")}
-                    disabled={!contactFilter}
-                  >
-                    <ClearOutlined fontSize="small" />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          <FormControl fullWidth sx={{ mb: 2 }}>
-            <InputLabel>Campaign</InputLabel>
-            <Select value={campaign} onChange={handleCampaignChange}>
-              <MenuItem value="">None</MenuItem>
-              {campaigns.map((cam) => <MenuItem key={cam.id} value={cam.id}>{cam.label}</MenuItem>)}
-            </Select>
-          </FormControl>
-        </Box>
-      </Paper>
-      <Box
-        sx={{
-          mt: 2,
-          maxHeight: "calc(100vh - 64px - 56px - 48px - 128px)",
-          overflowY: "auto",
-        }}
-      >
-        <TableContainer component={Paper} elevation={3}>
-          <Table>
+    <FormContainer>
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <TextField
+          label="Contact"
+          value={contactFilter}
+          onChange={(e) => {
+            setContactFilter(e.target.value);
+            debouncedFetchLetters();
+          }}
+          placeholder="Search by contact name"
+          fullWidth
+          sx={{ mb: 1, mt: 1 }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  size="small"
+                  onClick={() => setContactFilter("")}
+                  disabled={!contactFilter}
+                >
+                  <ClearOutlined fontSize="small" />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+        <FormControl fullWidth>
+          <InputLabel>Campaign</InputLabel>
+          <Select value={campaign} onChange={handleCampaignChange}>
+            <MenuItem value="">None</MenuItem>
+            {campaigns.map((cam) => (
+              <MenuItem key={cam.id} value={cam.id}>
+                {cam.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
+
+        <TableContainer component={Paper}  sx={{ maxHeight: "calc(100vh - 300px)", mt: 2 }}>
+          <Table stickyHeader>
             <TableHead>
               <TableRow>
                 <TableCell>Date</TableCell>
@@ -178,7 +186,7 @@ export const LetterLibrary = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      </Box>
+ 
 
       {selectedLetter && (
         <LetterUpdateModal
@@ -205,6 +213,6 @@ export const LetterLibrary = () => {
         onClose={() => setCopySnackbarOpen(false)}
         message="Letter copied to clipboard"
       />
-    </div>
+    </FormContainer>
   );
 };
