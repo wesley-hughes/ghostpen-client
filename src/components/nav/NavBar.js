@@ -9,10 +9,12 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu as MenuIcon, Brightness4, Brightness7 } from "@mui/icons-material";
+import {
+  Menu as MenuIcon,
+  Brightness4,
+  Brightness7,
+} from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
-import { Divider } from "@mui/material";
-
 
 export const NavBar = ({ toggleTheme, themeMode }) => {
   const navigate = useNavigate();
@@ -53,17 +55,18 @@ export const NavBar = ({ toggleTheme, themeMode }) => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          GhostPen
-        </Typography>
+        <img
+          src="/images/ghostpen.png"
+          alt="GhostPen Logo"
+          style={{
+            height: "5em",
+            width: "auto",
+            verticalAlign: "middle",
+            marginRight: "auto",
+            marginLeft: "auto",
+          }}
+        />
         <div>
-          <IconButton
-            onClick={toggleTheme}
-            color="inherit"
-            aria-label="toggle theme"
-          >
-            {themeMode === "light" ? <Brightness4 /> : <Brightness7 />}
-          </IconButton>
           <IconButton
             edge="end"
             color="inherit"
@@ -72,7 +75,7 @@ export const NavBar = ({ toggleTheme, themeMode }) => {
             aria-controls="avatar-menu"
             aria-label="account menu"
           >
-            <Avatar src={"./images/ghost.svg"} className="avatar" />
+            <Avatar src={"./images/settings.png"} className="avatar" />
           </IconButton>
           <Menu
             id="menu-appbar"
@@ -89,32 +92,16 @@ export const NavBar = ({ toggleTheme, themeMode }) => {
             open={Boolean(anchorElMenu)}
             onClose={handleMenuClose}
           >
-            <MenuItem
-              component={Link}
-              to="/letter"
-              onClick={handleMenuClose}
-            >
+            <MenuItem component={Link} to="/letter" onClick={handleMenuClose}>
               Write a letter
             </MenuItem>
-            <MenuItem
-              component={Link}
-              to="/library"
-              onClick={handleMenuClose}
-            >
+            <MenuItem component={Link} to="/library" onClick={handleMenuClose}>
               Letter Library
             </MenuItem>
-            <MenuItem
-              component={Link}
-              to="/contact"
-              onClick={handleMenuClose}
-            >
+            <MenuItem component={Link} to="/contact" onClick={handleMenuClose}>
               Manage Contacts
             </MenuItem>
-            <MenuItem
-              component={Link}
-              to="/campaign"
-              onClick={handleMenuClose}
-            >
+            <MenuItem component={Link} to="/campaign" onClick={handleMenuClose}>
               Manage Campaigns
             </MenuItem>
             <MenuItem
@@ -123,13 +110,6 @@ export const NavBar = ({ toggleTheme, themeMode }) => {
               onClick={handleMenuClose}
             >
               Write a Campaign
-            </MenuItem>
-            <MenuItem
-              component={Link}
-              to="/tag"
-              onClick={handleMenuClose}
-            >
-              Manage Tags
             </MenuItem>
           </Menu>
           <Menu

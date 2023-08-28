@@ -4,19 +4,8 @@ import { ApplicationViews } from "./views/ApplicationViews";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 
-const lightTheme = createTheme({
-  palette: {
-    mode: "light",
-    primary: {
-      main: "#617a5b",
-    },
-    text: {
-      primary: "#2b5425",
-    },
-  },
-});
 
-const darkTheme = createTheme({
+const theme = createTheme({
   palette: {
     mode: "dark",
     primary: {
@@ -30,18 +19,11 @@ const darkTheme = createTheme({
 });
 
 export const GhostPen = () => {
-  const [themeMode, setThemeMode] = useState("light");
-
-  const toggleTheme = () => {
-    setThemeMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
-  };
-
-  const theme = themeMode === "light" ? lightTheme : darkTheme;
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <NavBar toggleTheme={toggleTheme} themeMode={themeMode} />
+      <NavBar />
       <ApplicationViews />
     </ThemeProvider>
   );

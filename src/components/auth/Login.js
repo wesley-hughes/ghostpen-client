@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { loginUser } from "../../managers/AuthManager";
 
+
 export const Login = () => {
   const username = useRef("");
   const password = useRef("");
@@ -51,22 +52,10 @@ export const Login = () => {
 
       <Paper elevation={2} sx={{ padding: "24px" }}>
         <Typography
-          variant="h4"
-          align="center"
-          gutterBottom
-          sx={{
-            color: "#38423D",
-            fontWeight: "bold",
-            textTransform: "uppercase",
-          }}
-        >
-          GhostPen
-        </Typography>
-        <Typography
           variant="h6"
           align="center"
           gutterBottom
-          sx={{ color: "#526A66", textTransform: "uppercase" }}
+          sx={{ textTransform: "uppercase" }}
         >
           Please sign in
         </Typography>
@@ -99,7 +88,7 @@ export const Login = () => {
               </FormControl>
             </Grid>
             <Grid item xs={12}>
-              <Button type="submit" variant="contained" fullWidth>
+              <Button type="submit" fullWidth>
                 Sign In
               </Button>
             </Grid>
@@ -111,9 +100,8 @@ export const Login = () => {
           align="center"
           sx={{
             marginTop: 2,
-            color: "#526A66",
             "& a": {
-              color: "#617a5b",
+              color: "#fffff1",
               textDecoration: "none",
               "&:hover": {
                 textDecoration: "underline",

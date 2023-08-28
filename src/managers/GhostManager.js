@@ -8,7 +8,7 @@ export const ghostInput = async (userInput) => {
         "Content-Type": "application/json",
         Authorization: `Token ${getToken()}`,
       },
-      body: JSON.stringify({ user_input: userInput }),
+      body: JSON.stringify({user_input: userInput }),
     });
 
     const data = await response.json();

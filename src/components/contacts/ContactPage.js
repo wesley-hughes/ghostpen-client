@@ -1,34 +1,19 @@
 import React, { useEffect, useState } from "react";
-import {
-  TextField,
-  Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Grid,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Snackbar,
-} from "@mui/material";
-import {
-  getContactById,
-  deleteContact,
-  createContact,
-  updateContact,
-  getContacts,
-} from "../../managers/ContactManager";
+import { TextField, Button, FormControl, InputLabel, Select, MenuItem, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Snackbar } from "@mui/material";
+import { getContactById, deleteContact, createContact, updateContact, getContacts } from "../../managers/ContactManager";
 import { getTags } from "../../managers/TagManager";
 import { ContactForm } from "./ContactForm";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AddIcon from "@mui/icons-material/Add";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { getUser } from "../../managers/UserManager";
+import { styled } from "@mui/system";
+
+const PageContainer = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  maxWidth: "400px",
+  margin: "auto",
+});
 
 export const ContactPage = () => {
   const [contacts, setContacts] = useState([]);
@@ -122,56 +107,34 @@ export const ContactPage = () => {
     : filteredContacts;
 
   return (
-    <div className="contact-page">
-      <Button
-        variant="outlined"
-        sx={{ mt: 2 }}
-        startIcon={<AddIcon />}
-        onClick={() => setIsFormOpen(true)}
-      >
+
+    <PageContainer>
+      <Button variant="outlined" sx={{ mt: 2 }} startIcon={<AddIcon />} onClick={() => setIsFormOpen(true)}>
         Add Contact
       </Button>
 
       {isFormOpen && (
-        <ContactForm
-          contact={selectedContact ? selectedContact : null}
-          onSave={onSave}
-          fetchContacts={fetchContacts}
-          tags={tags}
-          handleSubmit={handleSubmit}
-        />
+        <ContactForm contact={selectedContact ? selectedContact : null} onSave={onSave} fetchContacts={fetchContacts} tags={tags} handleSubmit={handleSubmit} />
       )}
 
-      <div>
-        <Grid container spacing={2} sx={{ mt: 2 }}>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>Category</InputLabel>
-              <Select
-                value={selectedTag}
-                onChange={(e) => setSelectedTag(e.target.value)}
-              >
-                <MenuItem value="">All</MenuItem>
-                {tags.map((tag) => (
-                  <MenuItem key={tag.id} value={tag.label}>
-                    {tag.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Search"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </Grid>
+      <Grid container spacing={2} sx={{ mt: 2 }}>
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth>
+            <InputLabel>Category</InputLabel>
+            <Select value={selectedTag} onChange={(e) => setSelectedTag(e.target.value)}>
+              <MenuItem value="">All</MenuItem>
+              {tags.map((tag) => (
+                <MenuItem key={tag.id} value={tag.label}>
+                  {tag.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Grid>
-      </div>
-
-      <div className="contact-list">
+        <Grid item xs={12} sm={6}>
+          <TextField fullWidth label="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+        </Grid>
+      </Grid>
         <TableContainer
           component={Paper}
           sx={{ maxHeight: "calc(100vh - 300px)", mt: 2 }}
@@ -221,7 +184,7 @@ export const ContactPage = () => {
           onClose={() => setDeleteSnackbarOpen(false)}
           message="Contact deleted successfully"
         />
-      </div>
-    </div>
+      
+    </PageContainer>
   );
 };
